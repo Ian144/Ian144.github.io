@@ -1,6 +1,9 @@
 ## The Unreasonable Effectiveness of Algebraic Data Types - Representing the Financial Information eXchange Protocol (FIX) in F# #
 
-Structs and classes are pretty much all there is when it comes to designing your own types in object oriented programming languages. The ML branch of functional programming, which includes F#, has an alternative - Algebraic Data Types (ADTs). A good introduction to ADTs and using them in F# is [Scott Wlaschin - Domain modelling with the F# type system](https://vimeo.com/97507575). This article describes using ADTs to model [FIX](https://en.wikipedia.org/wiki/Financial_Information_eXchange) messages, the GitHub repository is .There are several different versions of FIX, FsFIX currently generates 
+Structs and classes are pretty much all there is when it comes to designing your own types in object oriented programming languages. The ML branch of functional programming, which includes F#, has an alternative - Algebraic Data Types (ADTs). A good introduction to ADTs and using them in F# is [Scott Wlaschin - Domain modelling with the F# type system](https://vimeo.com/97507575). ADTs can be concise, facilitate making [making invalid states unrepresentable](http://fsharpforfunandprofit.com/posts/designing-with-types-making-illegal-states-unrepresentable/) and  [property based testing](http://fsharpforfunandprofit.com/posts/property-based-testing)
+
+
+This article describes using ADTs to model [FIX](https://en.wikipedia.org/wiki/Financial_Information_eXchange) messages, the GitHub repository is [fsFixGen](https://github.com/Ian144/fsFixGen). FsFixGen creates ADTs to represent FIX messages, groups and fields from the same xml FIX specification used as source by the Java and C# versions of quickfix. FsFixGen also generates code to read and write FIX messages to and from byte arrays. There are several different versions of FIX, FsFIXGen currently works for FIX 4.4, but would work with other versions with little modification.
 
 
 
