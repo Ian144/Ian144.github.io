@@ -1,5 +1,19 @@
 ## The Unreasonable Effectiveness of Algebraic Data Types - Representing the Financial Information eXchange Protocol (FIX) in F# #
 
+Structs and classes are pretty much all there is when it comes to designing your own types in object oriented programming languages. The ML branch of functional programming, which includes F#, has an alternative - Algebraic Data Types (ADTs). A good introduction to ADTs and using them in F# is [Scott Wlaschin - Domain modelling with the F# type system](https://vimeo.com/97507575). This article describes using ADTs to model [FIX](https://en.wikipedia.org/wiki/Financial_Information_eXchange) messages, the GitHub repository is .There are several different versions of FIX, FsFIX currently generates 
+
+
+
+[https://en.wikipedia.org/wiki/Algebraic_data_type](https://en.wikipedia.org/wiki/Algebraic_data_type)
+
+there is a myth that F# and similar languages are best used for mathematical purposes
+i hope this shows that the attributes of F# and functional programming are applicable outside of the mathematical domain
+am not writing OO code in F#, C# is perfectly good for writing OO
+github repo url
+
+unlike enums it is impossible to have invalid instances
+
+
 You can use the [editor on GitHub](https://github.com/Ian144/Ian144.github.io/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
 
 Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
