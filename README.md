@@ -56,7 +56,7 @@ public class PosType extends StringField {
 
 The Java PosType class stores the case as a string, there are string constants defined, but their use is not checked. Java is a statically typed language, but it is not taking advantage of type checking, the code below compiles.
 
-```java
+```Java
 quickfix.field.PosType pt = new quickfix.field.PosType("any old string");
 ```
 
@@ -91,7 +91,7 @@ In F# it is impossible for PosType to have a case not defined in the type defini
 FIX specifies some related pairs of fields, whereby one field contains data and the preceding field contains the length of the data. The data field may contain FIX field and tag-value separators, though these must not be treated as seperators. Quickfix defines both fields separately, FsFix elides the length field. Length is read from or written to the FIX buffer by 
 
 
-```
+```Java
 public class RawDataLength extends IntField {
     static final long serialVersionUID = 20050617;
     public static final int FIELD = 95;
@@ -121,7 +121,7 @@ public class RawData extends StringField {
 ```
 
 
-```
+```fsharp
 type RawData =
     |RawData of NonEmptyByteArray.NonEmptyByteArray
      member x.Value = let (RawData v) = x in v
