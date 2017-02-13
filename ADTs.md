@@ -1,5 +1,9 @@
 # The Unreasonable Effectiveness of Algebraic Data Types
 
+[The unreasonable effectiveness of Algebraic Data Types](README.md)
+
+
+
 Structs and classes are pretty much all there is when it comes to designing your own types in object oriented programming languages. The ML branch of functional programming, which includes F#, has an alternative - Algebraic Data Types (ADTs). A good introduction to ADTs, why they are useful, and using them in F# is Scott Wlaschins NDC talk: [Domain modelling with the F# type system](https://vimeo.com/97507575), also useful is the [F# wikibook](https://en.wikibooks.org/wiki/F_Sharp_Programming/Discriminated_Unions). ADTs can be concise, facilitate [making invalid states unrepresentable](http://fsharpforfunandprofit.com/posts/designing-with-types-making-illegal-states-unrepresentable/) and work well with property based testing, see [this](http://fsharpforfunandprofit.com/posts/property-based-testing) or [this](https://fscheck.github.io/FsCheck/QuickStart.html). Nulls are less of an issue in F# compared to C# and Java and variables are immutable by default. 
 
  FsFixGen F# projects can be found in GitHub at [https://github.com/Ian144/fsFixGen](https://github.com/Ian144/fsFixGen). FsFixGen creates ADTs to represent FIX messages, groups and fields from the same xml FIX specification used as source by the Java and C# versions of quickfix. FsFixGen also generates code to read and write FIX messages to and from byte arrays. The generated F# FIX code has been checked in (so you don't need to generate it yourself to view it), and can be found in the fsFix subproject. There are several different versions of FIX, FsFIXGen currently works for FIX 4.4, but should work with other versions with a little modification. 
@@ -119,14 +123,14 @@ type RawData =
      member x.Value = let (RawData v) = x in v
 ```
 
-## what needs to be done to produce compilable F# from the xml FIX spec
-groups are defined in the messages or components which contain them, where possible FsFIX merges common group definitions into a single ADT group definition.
-topological sorting of groups and components 
-some merging of groups with the same name an structure
-    the most common case is merged
-    other possible merges are left with the name of their parent
-    topographical sort of groups and components so they are generated in depency order, if groupX has a componentY member then the componentY ADT needs to be defined in source before group
-X
+## Producing compilable F# from the xml FIX spec
+
+- merging FIX length+data field pairs
+- topological sorting of groups and components 
+- merging groups with the same structure. FIX groups are defined in the messages or components which contain them, where possible FsFIX merges common group definitions into a single ADT group definition.
+- the most common case is merged
+  other possible merges are left with the name of their parent
+  topographical sort of groups and components so they are generated in depency order, if groupX has a componentY member then the componentY ADT needs to be defined in source before group
 OTHER RULES (take from F# code) HERE
 
 ## FsFIX features
