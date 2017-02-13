@@ -1,8 +1,5 @@
 # The Unreasonable Effectiveness of Algebraic Data Types
 
-[The unreasonable effectiveness of Algebraic Data Types](README.md)
-
-
 
 Structs and classes are pretty much all there is when it comes to designing your own types in object oriented programming languages. The ML branch of functional programming, which includes F#, has an alternative - Algebraic Data Types (ADTs). A good introduction to ADTs, why they are useful, and using them in F# is Scott Wlaschins NDC talk: [Domain modelling with the F# type system](https://vimeo.com/97507575), also useful is the [F# wikibook](https://en.wikibooks.org/wiki/F_Sharp_Programming/Discriminated_Unions). ADTs can be concise, facilitate [making invalid states unrepresentable](http://fsharpforfunandprofit.com/posts/designing-with-types-making-illegal-states-unrepresentable/) and work well with property based testing, see [this](http://fsharpforfunandprofit.com/posts/property-based-testing) or [this](https://fscheck.github.io/FsCheck/QuickStart.html). Nulls are less of an issue in F# compared to C# and Java and variables are immutable by default. 
 
