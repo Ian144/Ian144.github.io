@@ -8,10 +8,10 @@ There is a myth that F# is only useful for mathematical and scientific applicati
 
 Structs and classes are pretty much all there is when it comes to designing your own types in object oriented programming languages. The ML branch of functional programming, which includes F#, has an alternative - Algebraic Data Types (ADTs). A good introduction to ADTs, why they are useful, and using them in F# is Scott Wlaschins NDC talk: [Domain modelling with the F# type system](https://vimeo.com/97507575), also useful is the [F# wikibook](https://en.wikibooks.org/wiki/F_Sharp_Programming/Discriminated_Unions). ADTs can be concise, facilitate [making invalid states unrepresentable](http://fsharpforfunandprofit.com/posts/designing-with-types-making-illegal-states-unrepresentable/) and work well with property based testing, see [this](http://fsharpforfunandprofit.com/posts/property-based-testing) or [this](https://fscheck.github.io/FsCheck/QuickStart.html). Nulls are less of an issue in F# compared to C# and Java and variables are immutable by default. 
 
- FsFixGen F# projects can be found at [fsFixGen](https://github.com/Ian144/fsFixGen). FsFixGen creates ADTs to represent FIX messages, groups and fields from the same xml FIX specification used as source by the Java and C# versions of quickfix. FsFixGen also generates code to read and write FIX messages to and from byte arrays. The generated F# FIX code has been checked in (so you don't need to generate it yourself, although you can), and can be found in the fsFix subproject. There are several different versions of FIX, FsFIXGen currently works for FIX 4.4, but should work with other versions with a little modification. This code generation is the first stage of project to build a fully fledged FIX engine using F#. I have not heard of anyone using a functional programming language to build a FIX engine, I thought ADTs would be a good match for FIX messages and that it would be interesting to try. Writing or generating OO code in F# has been avoided, C# is perfectly good for that, I want to illustrate the advantages of the functional approach.
+ FsFixGen F# projects can be found in GitHub at[fsFixGen](https://github.com/Ian144/fsFixGen). FsFixGen creates ADTs to represent FIX messages, groups and fields from the same xml FIX specification used as source by the Java and C# versions of quickfix. FsFixGen also generates code to read and write FIX messages to and from byte arrays. The generated F# FIX code has been checked in (so you don't need to generate it yourself, although you can), and can be found in the fsFix subproject. There are several different versions of FIX, FsFIXGen currently works for FIX 4.4, but should work with other versions with a little modification. This code generation is the first stage of project to build a fully fledged FIX engine using F#. I have not heard of anyone using a functional programming language to build a FIX engine, I thought ADTs would be a good match for FIX messages and that it would be interesting to try. Writing or generating OO code in F# has been avoided, C# is perfectly good for that, I want to illustrate the advantages of the functional approach.
 
 
-## Classes vs ADTs
+## Compile time instead of runtime errors
 
 ADTs can make some invalid states unrepresentable. For instance, some FIX fields have a finite set of valid values, such as 'PosType', in quickFix/Java PosType this looks like
 
@@ -62,7 +62,7 @@ The Java PosType class stores the case as a string, there are string constants d
 quickfix.field.PosType pt = new quickfix.field.PosType("any old string");
 ```
 
-In F# it is impossible to express such an error in compilable code, PosType and only take the set of values defined by the type. 
+In FsFix F# it is impossible to express such an error in compilable code, PosType and only take the set of values defined by the type. 
 
 ```fsharp
 type PosType =
