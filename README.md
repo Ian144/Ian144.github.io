@@ -9,7 +9,7 @@ There is a myth that F# is only useful for mathematical and scientific applicati
 FIX message code generation is the first stage of project to build a fully fledged FIX engine using F#. I have not heard of anyone using a functional programming language to build a FIX engine, I thought ADTs would be a good match for FIX messages and that it would be interesting to try. Writing or generating OO code in F# has been avoided, C# is perfectly good for that, I want to illustrate the advantages of the functional approach.
 
 
-[FsFixInner]()
+[The unreasonable effectiveness of Algebraic Data Types](ADTs.md)
 
 You can use the [editor on GitHub](https://github.com/Ian144/Ian144.github.io/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
 
