@@ -1,7 +1,7 @@
 # The Unreasonable Effectiveness of Algebraic Data Types
 
 
-Structs and classes are pretty much all there is when it comes to designing your own types in object oriented programming languages. The ML branch of functional programming, which includes F#, has an alternative - Algebraic Data Types (ADTs). A good introduction to ADTs, why they are useful, and using them in F# is Scott Wlaschins NDC talk: [Domain modelling with the F# type system](https://vimeo.com/97507575), also useful is the [F# wikibook](https://en.wikibooks.org/wiki/F_Sharp_Programming/Discriminated_Unions). ADTs can be concise, facilitate [making invalid states unrepresentable](http://fsharpforfunandprofit.com/posts/designing-with-types-making-illegal-states-unrepresentable/) and work well with property based testing, see [this](http://fsharpforfunandprofit.com/posts/property-based-testing) or [this](https://fscheck.github.io/FsCheck/QuickStart.html). Nulls are less of an issue in F# compared to C# and Java and variables are immutable by default. 
+Structs and classes are pretty much all there is when it comes to designing your own types in object oriented programming languages. The ML branch of functional programming, which includes F#, has an alternative - Algebraic Data Types (ADTs). A good introduction to ADTs, why they are useful, and using them in F# is Scott Wlaschins NDC talk: [Domain modelling with the F# type system](https://vimeo.com/97507575), also useful is the [F# wikibook](https://en.wikibooks.org/wiki/F_Sharp_Programming/Discriminated_Unions). ADTs can be concise, facilitate [making invalid states unrepresentable](http://fsharpforfunandprofit.com/posts/designing-with-types-making-illegal-states-unrepresentable/) and work well with property based testing, see [here](http://fsharpforfunandprofit.com/posts/property-based-testing) or [here](https://fscheck.github.io/FsCheck/QuickStart.html). Nulls are less of an issue in F# compared to C# and Java and variables are immutable by default. 
 
  FsFixGen F# projects can be found in GitHub at [https://github.com/Ian144/fsFixGen](https://github.com/Ian144/fsFixGen). FsFixGen creates ADTs to represent FIX messages, groups and fields from the same xml FIX specification used as source by the Java and C# versions of quickfix. FsFixGen also generates code to read and write FIX messages to and from byte arrays. The generated F# FIX code has been checked in (so you don't need to generate it yourself to view it), and can be found in the fsFix subproject. There are several different versions of FIX, FsFIXGen currently works for FIX 4.4, but should work with other versions with a little modification. 
 
@@ -148,7 +148,7 @@ OTHER RULES (take from F# code) HERE
 
 ## Codesize FsFIX vs QuickfixN
 
-    NOTE TO SELF - THIS MAY NOT BE BEING FAIR TO QUICKFIX, as FsFIX WILL REQUIRE Make<MSGNAME> TO HAVE THE SAME CONVENIENCE
+    NOTE TO SELF - THIS MAY NOT BE BEING FAIR TO QUICKFIX, as FsFIX WILL REQUIRE Make<MSGNAME> TO HAVE THE SAME CONVENIENCE WHICH MEANS ADDING 
 
     quickfixN message definitions: 14.4MB in 94 files
     quickfixN message definitions: 
@@ -157,23 +157,4 @@ OTHER RULES (take from F# code) HERE
     Fix44.Messages.fs: 87.2kb
     FsFix field definitions FIX4.4 only: 117kb in 1 file (for FIX4.4 only 900 fields, 916 before len+data merge )
 
-
-## Using FsFixGen to generate random but valid FIX messages for testing
-
-
-## Property based testing using FsFIX echo with QuickfixN and QuickfixJ 
-
-### FsFix issues (now resolved)
-
-FsFIX originally assummed that all fields are in the order they appear in the FIX xml spec. Correcting this required adding logic to search for fields in after indexing the byte buffer.
-
-
-when a field appears more than once in a FIX message, e.g. once in the msg and othertimes in a group in the msg
-if the first/outer instance of the field is optional then the value
-
-
-### QuickFixN issues
-
-1. DateTimes and Times involving [Leapseconds](https://en.wikipedia.org/wiki/Leap_second) are not recognised as valid
-2. RawData fields containing field or tag-value seperators raise formatting errors
 
