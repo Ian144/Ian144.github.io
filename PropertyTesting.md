@@ -68,15 +68,15 @@ FsFIX originally assumed that all fields are in the order they appear in the FIX
 The MiscFeeType and MassCancelRejectReason fields are defined by the FIX spec as Char fields, meaning they can be of any single character. But MiscFeeType.Agent, MiscFeeType.CONVERSION, MiscFeeType.PER_TRANSACTION and MassCancelRejectReason.OTHER have two character values. This did not flag errors when running FsFIX property tests (the ), it did show up when testing FsFIXEcho against QuickFixN, which understandably assumed Char fields should contribute 1 to the length. This looks like an issue with FIX4.4, as these fields are of type 'String' in FIX5.0.
 
         <field name="MiscFeeType" number="139" type="CHAR">
-            <pre><value description="AGENT" enum="12"/></>pre>
+            <pre><value description="AGENT" enum="12"/></pre>
             <value description="CONSUMPTION_TAX" enum="9"/>
-            <pre><value description="CONVERSION" enum="11"/></>pre>
+            <pre><value description="CONVERSION" enum="11"/></pre>
             <value description="EXCHANGE_FEES" enum="4"/>
             <value description="LEVY" enum="6"/>
             <value description="LOCAL_COMMISSION" enum="3"/>
             <value description="MARKUP" enum="8"/>
             <value description="OTHER" enum="7"/>
-            <pre><value description="PER_TRANSACTION" enum="10"/><pre>
+            <pre><value description="PER_TRANSACTION" enum="10"/></pre>
             <value description="REGULATORY" enum="1"/>
             <value description="STAMP" enum="5"/>
             <value description="TAX" enum="2"/>
@@ -89,7 +89,7 @@ The MiscFeeType and MassCancelRejectReason fields are defined by the FIX spec as
             <value description="INVALID_OR_UNKNOWN_TRADING_SESSION" enum="6"/>
             <value description="INVALID_OR_UNKNOWN_UNDERLYING" enum="2"/>
             <value description="MASS_CANCEL_NOT_SUPPORTED" enum="0"/>
-            <pre><value description="OTHER" enum="99"/><pre>
+            <pre><value description="OTHER" enum="99"/></pre>
 
 
 ### QuickFixN issues
