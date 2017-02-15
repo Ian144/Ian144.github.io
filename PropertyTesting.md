@@ -31,11 +31,11 @@ let WriteReadRoundTrip_DerivativeSecurityListRequest (msgIn:Fix44.Messages.Deriv
     msgIn         = msgOut                                                                 // is msgIn the same as msgOut, F# uses structural equality by default
 ```
 
-The property test framework used by F# is [FsCheck](https://fscheck.github.io/FsCheck), there are good examples of using property testing in [F# for Fun and Profit](http://fsharpforfunandprofit.com/posts/property-based-testing).
+The property test framework used by F# is [FsCheck](https://fscheck.github.io/FsCheck), good examples of using property testing can be found [here](http://fsharpforfunandprofit.com/posts/property-based-testing).
 
 When FsCheck finds a test failure it searches for a simpler failing test. In the case of the 'int' example simpler would mean a smaller int, then FsCheck displays the simplest version of the failing test. This is called 'shrinking'.
 
-If the type being generated cannot represent invalid states, and FsCheck runs the test a very large number of times then there will be more confidence in your code then "confidence = numTestRuns / numValidStates". No one claims this will find all bugs, but it is likely to find bugs that would not be found with other techniques. Property testing is not a silver bullet, but it is a 
+If the type being generated cannot represent invalid states, and FsCheck runs the test a very large number of times then it becomes more likely that the code under test satisfies the test property: "code confidence = numTestRuns / numValidStates". No one claims this will find all bugs, but it is likely to find bugs that would not be found with other techniques. Property testing is not a silver bullet, but it is a useful and underused (outside of functional programming) tool.
 
 Unit tests are still useful, for instance if you want to test that your parsing code can handle invalid input, in FsFIX this is used to test that fields that should not be in a buffer for a particular message type are detected.
 
