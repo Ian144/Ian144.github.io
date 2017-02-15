@@ -43,7 +43,6 @@ Tests like WriteReadRoundTrip_DerivativeSecurityListRequest can be run in the Vi
 
 
 
-
 ## QuickFix(N|J) Echo
 
 FsCheck type instance generation can be bent to other purposes, such as generating FIX messages in FsFIXEcho which sends the messages to some other FIX engine modified to just return the message it received (after deserializing and reserializing it). QuickFixN and QuickFixJ (C# and Java open source FIX engines) both come with 'Executor' demo projects, these were modified to do just this. FsFIXEcho has just enough FIX session logic to be able to login to the modified QuickFix executors, and runs a property test the checks that message that has done the full round-trip is the same as the original outgoing message.
@@ -52,10 +51,7 @@ FsFIXCodeGen generates F# code from a FIX44.xml spec, but there is more than one
 
 
 
-
-
 ## using FsFIX echo with QuickfixN and QuickfixJ
-
 
 
 ### FsFix issues (now resolved)
@@ -65,7 +61,7 @@ FsFIX originally assumed that all fields are in the order they appear in the FIX
 
 ### FIX spec issues
 
-The MiscFeeType and MassCancelRejectReason fields are defined by the FIX spec as Char fields, meaning they can be of any single character. But MiscFeeType.Agent, MiscFeeType.CONVERSION, MiscFeeType.PER_TRANSACTION and MassCancelRejectReason.OTHER have two character values. This did not flag errors when running FsFIX property tests (the ), it did show up when testing FsFIXEcho against QuickFixN, which understandably assumed Char fields should contribute 1 to the length. This looks like an issue with FIX4.4, as these fields are of type 'String' in FIX5.0.
+The MiscFeeType and MassCancelRejectReason fields are defined by the FIX spec as Char fields, meaning they can be of any single character. But MiscFeeType.Agent, MiscFeeType.CONVERSION, MiscFeeType.PER_TRANSACTION and MassCancelRejectReason.OTHER have two character values. This did not flag errors when running FsFIX property tests, it did show up when testing FsFIXEcho against QuickFixN, which understandably assumed Char fields should contribute 1 to the length. This looks like an issue with FIX4.4, as these fields are of type 'String' in FIX5.0.
 
 ```xml
 <field name="MiscFeeType" number="139" type="CHAR">
@@ -93,15 +89,17 @@ The MiscFeeType and MassCancelRejectReason fields are defined by the FIX spec as
     <value description="OTHER" enum="99"/>
 ```
 
+FsFIX treats these fields as multi-case discriminated unions, and pattern matches against the byte representation of the 'enum' value for each case irrespective of the number of bytes, and so did not have problems reading and writing these fields.
+
+
 ### QuickFixN issues
 
 1. DateTimes and Times involving [leap-seconds](https://en.wikipedia.org/wiki/Leap_second) are not recognized as valid
-2. RawData fields containing field or tag-value separators raise formatting errors. RawData fields are allowed by the FIX spec to contain separators.
+2. RawData fields containing field or tag-value separators raise formatting errors. RawData fields are allowed by the FIX spec to contain separators, both QuickFixJ and FsFIX handle RawData fields correctly.
 
 ### QuickFixJ issues
 
-FsFIX echo did not find any issues with QuickFixJ. The BusinessMessageReject message did cause QuickFixJH echo to stop replying to FsFIXEcho, that may be because BusinessMessageReject is an 'admin like' message, and QuickFixJ session logic expects the rejection to refer to an earlier message sent to FsFIXEcho.
-
+FsFIXEcho did not find any issues with QuickFixJ, although the BusinessMessageReject message did cause QuickFixJH echo to stop replying to FsFIXEcho, maybe because BusinessMessageReject is an 'admin like' message, and QuickFixJ session logic expects the rejection to refer to an earlier message sent to FsFIXEcho.
 
 
 
