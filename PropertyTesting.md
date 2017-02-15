@@ -46,12 +46,12 @@ Tests like WriteReadRoundTrip_DerivativeSecurityListRequest can be run in the Vi
 
 ## QuickFix(N|J) Echo
 
-FsChecks FIX message generation can be bent to other purposes, such as generating FIX messages in FsFIX, sending the messages to some other FIX engine which is modified to deserialize into a FIX object, then serialize and return that object to FsFix. QuickFixN and QuickFixJ (C# and Java open source FIX engines) both come with 'Executor' demo apps, these were modified to do this. The client is the FsFIXEcho app (which is in), which had just enough FIX session logic to be able to login to the modified QuickFix executors, and a property test taking a FIX message parameter.
+FsCheck type instance generation can be bent to other purposes, such as generating FIX messages in FsFIXEcho which sends the messages to some other FIX engine modified to just return the message it received (after deserializing and reserializing it). QuickFixN and QuickFixJ (C# and Java open source FIX engines) both come with 'Executor' demo projects, these were modified to do just this. FsFIXEcho has just enough FIX session logic to be able to login to the modified QuickFix executors, and runs a property test the checks that message that has done the full round-trip is the same as the original outgoing message.
+
+FsFIXCodeGen generates F# code from a FIX44.xml spec, but there is more than one version of this file, QuickFixJ's version differs slightly from QuickFixN's. The QuickFixN version is downloaded from the QuickFixN GitHub repository by [paket](https://fsprojects.github.io/Paket/) when building FsFIX. FsFIXCodeGen will pick this version by default. To test against QuickFiXj first run FsFIXCodeGen against the version of FIX44.xml that comes with it (pass the path to FsFIXCodeGen as a command-line parameter).
 
 
 
-
-* the [<PropTest>] attribute does not come with FsCheck but is easy to define,
 
 
 ## using FsFIX echo with QuickfixN and QuickfixJ
@@ -60,7 +60,7 @@ FsChecks FIX message generation can be bent to other purposes, such as generatin
 
 ### FsFix issues (now resolved)
 
-FsFIX originally assumed that all fields are in the order they appear in the FIX xml spec, this assumption was incorrect.
+FsFIX originally assumed that all fields are in the order they appear in the FIX XML spec, this assumption was incorrect, and QuickFixN and QuickFixJ do not work this way, messages sent to either can be echo'd back with the fields in a different order.
 
 
 ### FIX spec issues
@@ -68,29 +68,29 @@ FsFIX originally assumed that all fields are in the order they appear in the FIX
 The MiscFeeType and MassCancelRejectReason fields are defined by the FIX spec as Char fields, meaning they can be of any single character. But MiscFeeType.Agent, MiscFeeType.CONVERSION, MiscFeeType.PER_TRANSACTION and MassCancelRejectReason.OTHER have two character values. This did not flag errors when running FsFIX property tests (the ), it did show up when testing FsFIXEcho against QuickFixN, which understandably assumed Char fields should contribute 1 to the length. This looks like an issue with FIX4.4, as these fields are of type 'String' in FIX5.0.
 
 ```xml
-        <field name="MiscFeeType" number="139" type="CHAR">
-            <value description="AGENT" enum="12"/>
-            <value description="CONSUMPTION_TAX" enum="9"/>
-            <value description="CONVERSION" enum="11"/>
-            <value description="EXCHANGE_FEES" enum="4"/>
-            <value description="LEVY" enum="6"/>
-            <value description="LOCAL_COMMISSION" enum="3"/>
-            <value description="MARKUP" enum="8"/>
-            <value description="OTHER" enum="7"/>
-            <value description="PER_TRANSACTION" enum="10"/>
-            <value description="REGULATORY" enum="1"/>
-            <value description="STAMP" enum="5"/>
-            <value description="TAX" enum="2"/>
+<field name="MiscFeeType" number="139" type="CHAR">
+    <value description="AGENT" enum="12"/>
+    <value description="CONSUMPTION_TAX" enum="9"/>
+    <value description="CONVERSION" enum="11"/>
+    <value description="EXCHANGE_FEES" enum="4"/>
+    <value description="LEVY" enum="6"/>
+    <value description="LOCAL_COMMISSION" enum="3"/>
+    <value description="MARKUP" enum="8"/>
+    <value description="OTHER" enum="7"/>
+    <value description="PER_TRANSACTION" enum="10"/>
+    <value description="REGULATORY" enum="1"/>
+    <value description="STAMP" enum="5"/>
+    <value description="TAX" enum="2"/>
 
-        <field name="MassCancelRejectReason" number="532" type="CHAR">
-            <value description="INVALID_OR_UNKNOWN_CFICODE" enum="4"/>
-            <value description="INVALID_OR_UNKNOWN_PRODUCT" enum="3"/>
-            <value description="INVALID_OR_UNKNOWN_SECURITY_TYPE" enum="5"/>
-            <value description="INVALID_OR_UNKNOWN_SECURITY" enum="1"/>
-            <value description="INVALID_OR_UNKNOWN_TRADING_SESSION" enum="6"/>
-            <value description="INVALID_OR_UNKNOWN_UNDERLYING" enum="2"/>
-            <value description="MASS_CANCEL_NOT_SUPPORTED" enum="0"/>
-            <value description="OTHER" enum="99"/>
+<field name="MassCancelRejectReason" number="532" type="CHAR">
+    <value description="INVALID_OR_UNKNOWN_CFICODE" enum="4"/>
+    <value description="INVALID_OR_UNKNOWN_PRODUCT" enum="3"/>
+    <value description="INVALID_OR_UNKNOWN_SECURITY_TYPE" enum="5"/>
+    <value description="INVALID_OR_UNKNOWN_SECURITY" enum="1"/>
+    <value description="INVALID_OR_UNKNOWN_TRADING_SESSION" enum="6"/>
+    <value description="INVALID_OR_UNKNOWN_UNDERLYING" enum="2"/>
+    <value description="MASS_CANCEL_NOT_SUPPORTED" enum="0"/>
+    <value description="OTHER" enum="99"/>
 ```
 
 ### QuickFixN issues
@@ -106,6 +106,7 @@ FsFIX echo did not find any issues with QuickFixJ. The BusinessMessageReject mes
 
 
 
+* the [<PropTest>] attribute does not come with FsCheck but is easy to define
 
 
 
