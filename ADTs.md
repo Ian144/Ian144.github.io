@@ -80,7 +80,7 @@ type PosType =
     | IntegralSplit
 ```
 
-##ADTs are consise
+## ADTs are consise
 
 The FIX4.4.xml spec defines the UserRequest message like this
 
