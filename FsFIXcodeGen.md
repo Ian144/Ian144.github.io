@@ -5,15 +5,11 @@
 
 
 
-
-different fix4.4.xml's
-    c# and java
-
 FsFIXGen 
-By default FsFIXGen loads a copy of the QuickFixN version
 
 
-any small change to fix4.4.xml required
+
+
 merging of groups
 eliding the group-length field
     the length field is written and read, the value being derived from the list of group instances
