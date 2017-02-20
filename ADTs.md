@@ -1,11 +1,12 @@
 # The Unreasonable Effectiveness of Algebraic Data Types
 
 
-Structs and classes are pretty much all there is when it comes to designing your own types in object oriented programming languages. The ML branch of functional programming, which includes F#, has an alternative - Algebraic Data Types (ADTs). A good introduction to ADTs, why they are useful, and using them in F# is Scott Wlaschins NDC talk: [Domain modelling with the F# type system](https://vimeo.com/97507575), also useful is the [F# wikibook](https://en.wikibooks.org/wiki/F_Sharp_Programming/Discriminated_Unions). ADTs can be concise, facilitate [making invalid states unrepresentable](http://fsharpforfunandprofit.com/posts/designing-with-types-making-illegal-states-unrepresentable/) and work well with property based testing, see [here](http://fsharpforfunandprofit.com/posts/property-based-testing) or [here](https://fscheck.github.io/FsCheck/QuickStart.html). Nulls are less of an issue in F# compared to C# and Java and variables are immutable by default. 
+Structs and classes are pretty much all there is when it comes to designing your own types in object oriented programming languages. The ML branch of functional programming, which includes F#, has an alternative - Algebraic Data Types (ADTs). A good introduction to ADTs, why they are useful, and using them in F# is Scott Wlaschins NDC talk: [Domain modelling with the F# type system](https://vimeo.com/97507575), also useful is the [F# wikibook](https://en.wikibooks.org/wiki/F_Sharp_Programming/Discriminated_Unions). ADTs can be concise, facilitate [making invalid states unrepresentable](http://fsharpforfunandprofit.com/posts/designing-with-types-making-illegal-states-unrepresentable/) and work well with property based testing, see [here](http://fsharpforfunandprofit.com/posts/property-based-testing) or [here](https://fscheck.github.io/FsCheck/QuickStart.html). 
 
- FsFixGen F# projects can be found in GitHub at [https://github.com/Ian144/fsFixGen](https://github.com/Ian144/fsFixGen). FsFixGen creates ADTs to represent FIX messages, groups and fields from the same xml FIX specification used as source by the Java and C# versions of quickfix. FsFixGen also generates code to read and write FIX messages to and from byte arrays. The generated F# FIX code has been checked in (so you don't need to generate it yourself to view it), and can be found in the fsFix subproject. There are several different versions of FIX, FsFIXGen currently works for FIX 4.4, but should work with other versions with a little modification. 
+FsFixGen creates ADTs to represent FIX messages, groups and fields from the same xml FIX specification used as source by the Java and C# versions of quickfix. FsFixGen also generates code to read and write FIX messages to and from byte arrays. The generated F# FIX code has been checked in (so you don't need to generate it yourself to view it), and can be found in the FsFIX subproject. There are several different versions of FIX, FsFIXGen currently works for FIX 4.4, but should work with other versions with a little modification. 
 
-## Compile time instead of runtime errors
+
+## ADTs can move some runtime errors to compile time
 
 Some FIX fields have a finite set of valid values, such as 'PosType', in quickFix/Java PosType this looks like
 
@@ -79,82 +80,223 @@ type PosType =
     | IntegralSplit
 ```
 
-### FsFIX merges length + data field pairs
+##ADTs are consise
 
-FIX specifies some related pairs of fields, whereby one field contains data and the preceding field contains the length of the data. The data field may contain FIX field and tag-value separators, though these must not be treated as seperators. Quickfix defines both fields separately, FsFix elides the length field. Length is read from or written to the FIX buffer by 
+The FIX4.4.xml spec defines the UserRequest message like this
+
+```Xml
+<message name="UserRequest" msgtype="BE" msgcat="app">
+    <field name="UserRequestID" required="Y" />
+    <field name="UserRequestType" required="Y" />
+    <field name="Username" required="Y" />
+    <field name="Password" required="N" />
+    <field name="NewPassword" required="N" />
+    <field name="RawDataLength" required="N" />
+    <field name="RawData" required="N" />
+</message>
+```
+
+The generated F# ADT looks very similar and is of comparible length to the XML definition, and is easy to take-in and understand
+
+```F#
+type UserRequest = {
+    UserRequestID: UserRequestID
+    UserRequestType: UserRequestType
+    Username: Username
+    Password: Password option
+    NewPassword: NewPassword option
+    RawData: RawData option
+    }
+```
+
+But to be fair to Java and C# creating FsFIX messages that have many optional fields could be tedious, so helper factory functions are also generated like this one below for UserRequest. Some message types have many optional fields, there are 119 in an ExecutionReport, typing all the 'None's would be painfull.
+
+```F#
+let MkUserRequest (userRequestID:UserRequestID, userRequestType:UserRequestType, username:Username) : UserRequest = {
+    UserRequestID = userRequestID
+    UserRequestType = userRequestType
+    Username = username
+    Password = None
+    NewPassword = None
+    RawData = None
+  }
+```
+FsFIX stores the msgtype tag value, "BE" in this case, in a single lookup function for all message types. The cost of this is spreadbetween all message types.
+
+The QuickFix Java implementation of UserRequest, below, offers no more functionality than the F# version but is considerably longer, 4453 characters vs 492 for the FsFIX definition + factory function. 
 
 ```Java
-public class RawDataLength extends IntField {
+public class UserRequest extends Message {
+
     static final long serialVersionUID = 20050617;
-    public static final int FIELD = 95;
-
-    public RawDataLength() {
-        super(95);
-    }
-
-    public RawDataLength(int data) {
-        super(95, data);
-    }
-}
-
-public class RawData extends StringField {
-    static final long serialVersionUID = 20050617;
-    public static final int FIELD = 96;
+    public static final String MSGTYPE = "BE";
     
-    public RawData() {
-        super(96);
+
+    public UserRequest() {
+        super();
+        getHeader().setField(new quickfix.field.MsgType(MSGTYPE));
+    }
+    
+    public UserRequest(quickfix.field.UserRequestID userRequestID, quickfix.field.UserRequestType userRequestType, quickfix.field.Username username) {
+        this();
+        setField(userRequestID);
+        setField(userRequestType);
+        setField(username);
+    }
+    
+    public void set(quickfix.field.UserRequestID value) {
+        setField(value);
     }
 
-    public RawData(String data) {
-        super(96, data);
+    public quickfix.field.UserRequestID get(quickfix.field.UserRequestID value) throws FieldNotFound {
+        getField(value);
+        return value;
+    }
+
+    public quickfix.field.UserRequestID getUserRequestID() throws FieldNotFound {
+        return get(new quickfix.field.UserRequestID());
+    }
+
+    public boolean isSet(quickfix.field.UserRequestID field) {
+        return isSetField(field);
+    }
+
+    public boolean isSetUserRequestID() {
+        return isSetField(923);
+    }
+
+    public void set(quickfix.field.UserRequestType value) {
+        setField(value);
+    }
+
+    public quickfix.field.UserRequestType get(quickfix.field.UserRequestType value) throws FieldNotFound {
+        getField(value);
+        return value;
+    }
+
+    public quickfix.field.UserRequestType getUserRequestType() throws FieldNotFound {
+        return get(new quickfix.field.UserRequestType());
+    }
+
+    public boolean isSet(quickfix.field.UserRequestType field) {
+        return isSetField(field);
+    }
+
+    public boolean isSetUserRequestType() {
+        return isSetField(924);
+    }
+
+    public void set(quickfix.field.Username value) {
+        setField(value);
+    }
+
+    public quickfix.field.Username get(quickfix.field.Username value) throws FieldNotFound {
+        getField(value);
+        return value;
+    }
+
+    public quickfix.field.Username getUsername() throws FieldNotFound {
+        return get(new quickfix.field.Username());
+    }
+
+    public boolean isSet(quickfix.field.Username field) {
+        return isSetField(field);
+    }
+
+    public boolean isSetUsername() {
+        return isSetField(553);
+    }
+
+    public void set(quickfix.field.Password value) {
+        setField(value);
+    }
+
+    public quickfix.field.Password get(quickfix.field.Password value) throws FieldNotFound {
+        getField(value);
+        return value;
+    }
+
+    public quickfix.field.Password getPassword() throws FieldNotFound {
+        return get(new quickfix.field.Password());
+    }
+
+    public boolean isSet(quickfix.field.Password field) {
+        return isSetField(field);
+    }
+
+    public boolean isSetPassword() {
+        return isSetField(554);
+    }
+
+    public void set(quickfix.field.NewPassword value) {
+        setField(value);
+    }
+
+    public quickfix.field.NewPassword get(quickfix.field.NewPassword value) throws FieldNotFound {
+        getField(value);
+        return value;
+    }
+
+    public quickfix.field.NewPassword getNewPassword() throws FieldNotFound {
+        return get(new quickfix.field.NewPassword());
+    }
+
+    public boolean isSet(quickfix.field.NewPassword field) {
+        return isSetField(field);
+    }
+
+    public boolean isSetNewPassword() {
+        return isSetField(925);
+    }
+
+    public void set(quickfix.field.RawDataLength value) {
+        setField(value);
+    }
+
+    public quickfix.field.RawDataLength get(quickfix.field.RawDataLength value) throws FieldNotFound {
+        getField(value);
+        return value;
+    }
+
+    public quickfix.field.RawDataLength getRawDataLength() throws FieldNotFound {
+        return get(new quickfix.field.RawDataLength());
+    }
+
+    public boolean isSet(quickfix.field.RawDataLength field) {
+        return isSetField(field);
+    }
+
+    public boolean isSetRawDataLength() {
+        return isSetField(95);
+    }
+
+    public void set(quickfix.field.RawData value) {
+        setField(value);
+    }
+
+    public quickfix.field.RawData get(quickfix.field.RawData value) throws FieldNotFound {
+        getField(value);
+        return value;
+    }
+
+    public quickfix.field.RawData getRawData() throws FieldNotFound {
+        return get(new quickfix.field.RawData());
+    }
+
+    public boolean isSet(quickfix.field.RawData field) {
+        return isSetField(field);
+    }
+
+    public boolean isSetRawData() {
+        return isSetField(96);
     }
 }
-
 ```
 
-The same field in FsFIX F# is
+### Overall size difference of FIX4.4 generated code 
 
-```fsharp
-type RawData =
-    |RawData of NonEmptyByteArray.NonEmptyByteArray
-     member x.Value = let (RawData v) = x in v
-```
+FsFIX all generated FIX4.4 source files side: 2.10 MB (2,209,608 bytes) - 13 files
+QuickFIXJ generated FIX4.4 messages only: 7.38 MB (7,745,299 bytes) - 121 files
 
-## Producing compilable F# from the xml FIX spec
-
-- merging FIX length+data field pairs
-- topological sorting of groups and components 
-- merging groups with the same structure. FIX groups are defined in the messages or components which contain them, where possible FsFIX merges common group definitions into a single ADT group definition.
-- the most common case is merged
-  other possible merges are left with the name of their parent
-  topographical sort of groups and components so they are generated in depency order, if groupX has a componentY member then the componentY ADT needs to be defined in source before group
-OTHER RULES (take from F# code) HERE
-
-## FsFIX features
-## FsFIX characteristics
-- FIX Components are represented as ADTs so work with intellisense, but have no effect in the byte stream representation of the fix msg. 
-- Multicase FIX fields are represented by Multicase ADT discriminated unions (DUs)
-- Single value Fix fields are represented by a single-case DU, not raw strings, ints etc
-- Fields do not know their tag, field read/write functions do know their tag
-- Optional fields, groups or components are wrapped in the F# Option type
-- FIX message reading detects unexpected fields in FIX buffers
-- Field reading copes with unordered msg body fields (unordered compared the order in the fix spec)
-- Time and DateTime types cope with leap-seconds as per the FIX spec
-- Group reading expects fields and sub-groups within the group to be ordered and sequential, but the group can start in any position
-- Extra group instances are detected, if the number of groups is stated to be 4 but 5 are present then this will be detected
-- Unexpected fields for a given msg type are detected
-- Fields which may contain field or tag-value separators, such as RawData
-
-
-## Codesize FsFIX vs QuickfixN
-
-    NOTE TO SELF - THIS MAY NOT BE BEING FAIR TO QUICKFIX, as FsFIX WILL REQUIRE Make<MSGNAME> TO HAVE THE SAME CONVENIENCE WHICH MEANS ADDING 
-
-    quickfixN message definitions: 14.4MB in 94 files
-    quickfixN message definitions: 
-    quickfixN field definitions: 647kb non comment bytes in 1 file (seems to be a single file for all FIX versions, 999 fields)
-
-    Fix44.Messages.fs: 87.2kb
-    FsFix field definitions FIX4.4 only: 117kb in 1 file (for FIX4.4 only 900 fields, 916 before len+data merge )
 
 
