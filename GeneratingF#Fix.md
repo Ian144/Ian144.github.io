@@ -1,27 +1,53 @@
-# Generating F# from FIX spec XML
+# Generating F# from FIX spec XML (and generating FIX xml from F#)
 
-- merging FIX length+data field pairs
-- topological sorting of groups and components 
-- merging groups with the same structure. FIX groups are defined in the messages or components which contain them, where possible FsFIX merges common group definitions into a single ADT group definition.
-- the most common case is merged
-  other possible merges are left with the name of their parent
-  topographical sort of groups and components so they are generated in depency order, if groupX has a componentY member then the componentY ADT needs to be defined in source before group
-OTHER RULES (take from F# code) HERE
 
-## FsFIX features
-## FsFIX characteristics
-- FIX Components are represented as ADTs so work with intellisense, but have no effect in the byte stream representation of the fix msg. 
+
+F# requires modules, types, function definitions etc to be defined before they are used. FIX has groups containing components and components containing groups, and so FsFIX.CodeGen needs to generate components and groups in such a way that the dependencies appear before the types that depend on them. Components and Groups are generated into a single module, called Fix44.CompoundItems for want of a better name. They have been sorted [topologically](https://en.wikipedia.org/wiki/Topological_sorting) to get the dependency order such that the code will compile.
+
+FsFIX represents FIX Components are represented as F# ADTs, but they have no effect in the byte representation of the FIX message. 
+
+Groups in the FIX4.4.xml spec are defined inline in their parent messages, groups (groups can contain groups) and components. There are many groups with the same name, sometimes containing the same members, sometimes not. FsFIX code generation finds the most common case of each set of groups with the same name, and gives it a separate F# definition with that name, other instances of groups types are generated with a name that has been prefixed with the of the containing type. 
+
+### the most common 'Legs' group
+
+```F#
+type NoLegsGrp = {
+    InstrumentLegFG: InstrumentLegFG // component
+    }
+
+### Another 'Legs' group containing extra fields, and with the name of the parent type 'TradeCaptureReport' prefixed to get the full type name.
+
+```F#
+type TradeCaptureReportAckNoLegsGrp = {
+    InstrumentLegFG: InstrumentLegFG // component
+    LegQty: LegQty option
+    LegSwapType: LegSwapType option
+    NoLegStipulationsGrp: NoLegStipulationsGrp list option // group
+    LegPositionEffect: LegPositionEffect option
+    LegCoveredOrUncovered: LegCoveredOrUncovered option
+    NoNestedPartyIDsGrp: NoNestedPartyIDsGrp list option // group
+    LegRefID: LegRefID option
+    LegPrice: LegPrice option
+    LegSettlType: LegSettlType option
+    LegSettlDate: LegSettlDate option
+    LegLastPx: LegLastPx option
+    }
+```
+The 'base' group name in FsFIX F# is that of the field containing the number of repeated group instances suffixed with 'Grp'
+
+
+## other FsFIX characteristics and features
 - Multicase FIX fields are represented by Multicase ADT discriminated unions (DUs)
 - Single value Fix fields are represented by a single-case DU, not raw strings, ints etc
 - Fields do not know their tag, field read/write functions do know their tag
 - Optional fields, groups or components are wrapped in the F# Option type
 - FIX message reading detects unexpected fields in FIX buffers
-- Field reading copes with unordered msg body fields (unordered compared the order in the fix spec)
+- Field reading copes with unordered msg body fields (unordered compared the order in the fix spec) outside of groups
 - Time and DateTime types cope with leap-seconds as per the FIX spec
 - Group reading expects fields and sub-groups within the group to be ordered and sequential, but the group can start in any position
-- Extra group instances are detected, if the number of groups is stated to be 4 but 5 are present then this will be detected
+- Extra group instances are detected, if the number of group instances is stated to be 4 but 5 are present then this will be detected
 - Unexpected fields for a given msg type are detected
-- Fields which may contain field or tag-value separators, such as RawData
+- Fields which may contain field or tag-value separators, such as RawData, are handled correctly
 
 
 
@@ -68,37 +94,4 @@ type RawData =
 ```
 
 ## Producing compilable F# from the xml FIX spec
-
-
-
-## Codesize FsFIX vs QuickfixN
-
-    NOTE TO SELF - THIS MAY NOT BE BEING FAIR TO QUICKFIX, as FsFIX WILL REQUIRE Make<MSGNAME> TO HAVE THE SAME CONVENIENCE
-
-    quickfixN message definitions: 14.4MB in 94 files
-    quickfixN message definitions: 
-    quickfixN field definitions: 647kb non comment bytes in 1 file (seems to be a single file for all FIX versions, 999 fields)
-
-    Fix44.Messages.fs: 87.2kb
-    FsFix field definitions FIX4.4 only: 117kb in 1 file (for FIX4.4 only 900 fields, 916 before len+data merge )
-
-
-## Using FsFixGen to generate random but valid FIX messages for testing
-
-
-## Property based testing using FsFIX echo with QuickfixN and QuickfixJ 
-
-### FsFix issues (now resolved)
-
-FsFIX originally assummed that all fields are in the order they appear in the FIX xml spec. Correcting this required adding logic to search for fields in after indexing the byte buffer.
-
-
-when a field appears more than once in a FIX message, e.g. once in the msg and othertimes in a group in the msg
-if the first/outer instance of the field is optional then the value
-
-
-### QuickFixN issues
-
-1. DateTimes and Times involving [Leapseconds](https://en.wikipedia.org/wiki/Leap_second) are not recognised as valid
-2. RawData fields containing field or tag-value seperators raise formatting errors
 

@@ -1,24 +1,25 @@
+# Property Based Testing
 
-## Property based testing
 
 
-F# code can be unit tested using the same tools as C#. The Xunit test framework allows different sets of parameters to be passed to unit tests using the [Theory] and [InlineData(99)] attributes, effectively creating a different unit test for each data set.
+## What is property based testing
+
+Consider a progression from 'unit tests' to 'theory based unit tests with inline data' to property tests. F# code can be unit tested using the same tools as C#. The Xunit test framework allows different sets of parameters to be passed to unit tests using the [Theory] and [InlineData(99)] attributes, effectively creating a different unit test for each data set.
 
 ```C#
 [Theory]
-[InlineData(3)]
-[InlineData(5)]
-[InlineData(6)]
-public void MyFirstTheory(int value)
+[InlineData('a')]
+[InlineData('b')]
+[InlineData('?')]
+public void MyTheory(char value)
 {
-    Assert.True(IsOdd(value));
+    Assert.True( Char.IsLetter(value) );
 }
 ```
 
-Property testing extends this idea, the test framework to automatically generates test parameters, instead of them being supplied by the developer via [InlineData(xx)] attributes. This example uses has simple 'int' parameter, but automatic generation of arbitrarily complex types works just as well. Each test can be run a configurable number of times, the default is 100 but it can be set to millions. In a sense, running a property test is running a search for undiscovered bugs, unit tests fulfill a different purpose.
+Property testing extends this idea, instead of test data being supplied by the developer via [InlineData(xx)] attributes, the test framework automatically generates test data. Automatic generation of instances for arbitrarily complex types works just as well as for primative types. Each property test can be run a configurable number of times, the default is 100 but it can be set to millions (which will take a long time to run). In a sense, running a property test is running a search for undiscovered bugs and incorrect assumptions, unit tests fulfill a different purpose.
 
-
-In the test below random but valid DerivativeSecurityListRequest FIX messages are serialized and deserialized, and the output is compared with the input.
+In the FsFIX test below, random but valid DerivativeSecurityListRequest FIX messages are serialized and deserialized, then the output is compared with the input.
 
 ```F#
 [<PropTest>]
@@ -32,9 +33,7 @@ let WriteReadRoundTrip_DerivativeSecurityListRequest (msgIn:Fix44.Messages.Deriv
     msgIn         = msgOut                                                                 // is msgIn the same as msgOut, F# uses structural equality by default
 ```
 
-The property test framework used by F# is [FsCheck](https://fscheck.github.io/FsCheck), good examples of using property testing can be found [here](http://fsharpforfunandprofit.com/posts/property-based-testing).
-
-When FsCheck finds a test failure it searches for a simpler failing test. In the case of the 'int' example simpler would mean a smaller int, then FsCheck displays the simplest version of the failing test. This is called 'shrinking'.
+The property test framework used by FsFIX is [FsCheck](https://fscheck.github.io/FsCheck), good examples of using property testing can be found [here](http://fsharpforfunandprofit.com/posts/property-based-testing).
 
 If the type being generated cannot represent invalid states, and FsCheck runs the test a very large number of times then it becomes more likely that the code under test satisfies the test property: "code confidence = numTestRuns / numValidStates". No one claims this will find all bugs, but it is likely to find bugs that would not be found with other techniques. Property testing is not a silver bullet, but it is a useful and underused (outside of functional programming) tool.
 
@@ -50,20 +49,20 @@ FsCheck type instance generation can be bent to other purposes, such as generati
 
 FsFIXCodeGen generates F# code from a FIX44.xml spec, but there is more than one version of this file, QuickFixJ's version differs slightly from QuickFixN's. To test against QuickFiXJ first run FsFIXCodeGen against the version of FIX44.xml that comes with QuickFiXJ (pass the path to FsFIXCodeGen as a command-line parameter). 
 
-This 'echo' testing found issues with FsFIX, 
 
+## Issues found by FsFIXEcho with FsFIX, QuickFIXJ, QuickFIXN and the FIX 4.4 spec
 
 
 ### FsFix issues (now resolved)
 
-1. FsFIX originally assumed that all fields are in the order they appear in the FIX XML spec, this assumption was incorrect, and QuickFixN and QuickFixJ do not work this way, messages sent to either can be echo'd back with the fields in a different order.
+1. FsFIX originally assumed that all fields are in the order they appear in the FIX XML spec, outside of repeating groups this assumption was incorrect, QuickFixN and QuickFixJ do not work this way.
 
-2. After fixing the issue above FsFIX was confused when an optional field can appear in the message itself, and again inside repeating group inside the message. Specifically the SettlementInstructions message contains an optional SettlInstSource field, but this field also appears inside a repeating group inside the SettlementInstructions message.
+2. After fixing the issue above, FsFIX was confused when an optional field can appear in the message itself and again inside a repeating group inside the message. Specifically the SettlementInstructions message contains an optional SettlInstSource field, but this field also appears inside a repeating group inside the SettlementInstructions message.
 
 
-### FIX spec issues
+### FIX 4.4 specification issues
 
-The MiscFeeType and MassCancelRejectReason fields are defined by the FIX spec as Char fields, meaning they can be of any single character. But MiscFeeType.Agent, MiscFeeType.CONVERSION, MiscFeeType.PER_TRANSACTION and MassCancelRejectReason.OTHER have two character values. This did not flag errors when running FsFIX property tests, it did show up when testing FsFIXEcho against QuickFixN, which understandably assumed Char fields should contribute 1 to the length. This looks like an issue with FIX4.4, as these fields are of type 'String' in FIX5.0.
+The MiscFeeType and MassCancelRejectReason fields are defined by the FIX spec as Char fields, but MiscFeeType.Agent, MiscFeeType.CONVERSION, MiscFeeType.PER_TRANSACTION and MassCancelRejectReason.OTHER have two character values. This did not create test failureswhen running FsFIX property tests, it did show up when testing FsFIXEcho against QuickFixN, which understandably assumed Char fields should contribute 1 to the length. This looks like an issue with FIX4.4, as these fields are of type 'String' in FIX5.0.
 
 ```xml
 <field name="MiscFeeType" number="139" type="CHAR">
@@ -106,7 +105,7 @@ FsFIXEcho did not find any issues with QuickFixJ, although the BusinessMessageRe
 
 
 
-
+### CONCLUSION TBD
 
 
 

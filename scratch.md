@@ -1,35 +1,5 @@
 
 
-### FsFIX merges length + data field pairs
-
-FIX specifies some related pairs of fields, whereby one field contains data and the preceding field contains the length of the data. The data field may contain FIX field and tag-value separators, though these must not be treated as seperators. Quickfix defines both fields separately, FsFix elides the length field. Length is read from or written to the FIX buffer by 
-
-```Java
-public class RawDataLength extends IntField {
-    static final long serialVersionUID = 20050617;
-    public static final int FIELD = 95;
-
-    public RawDataLength() {
-        super(95);
-    }
-
-    public RawDataLength(int data) {
-        super(95, data);
-    }
-}
-
-public class RawData extends StringField {
-    static final long serialVersionUID = 20050617;
-    public static final int FIELD = 96;
-    
-    public RawData() {
-        super(96);
-    }
-
-    public RawData(String data) {
-        super(96, data);
-    }
-}
 
 ```
 
@@ -66,16 +36,5 @@ OTHER RULES (take from F# code) HERE
 - Unexpected fields for a given msg type are detected
 - Fields which may contain field or tag-value separators, such as RawData
 
-
-## Codesize FsFIX vs QuickfixN
-
-    NOTE TO SELF - THIS MAY NOT BE BEING FAIR TO QUICKFIX, as FsFIX WILL REQUIRE Make<MSGNAME> TO HAVE THE SAME CONVENIENCE WHICH MEANS ADDING 
-
-    quickfixN message definitions: 14.4MB in 94 files
-    quickfixN message definitions: 
-    quickfixN field definitions: 647kb non comment bytes in 1 file (seems to be a single file for all FIX versions, 999 fields)
-
-    Fix44.Messages.fs: 87.2kb
-    FsFix field definitions FIX4.4 only: 117kb in 1 file (for FIX4.4 only 900 fields, 916 before len+data merge )
 
 
