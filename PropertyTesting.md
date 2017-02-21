@@ -15,9 +15,10 @@ public void MyFirstTheory(int value)
 }
 ```
 
-In property testing this idea is extended to allow the test framework to automatically generate test parameters, instead of them being supplied by the developer via [InlineData(xx)] attributes. This example uses has simple 'int' parameter, but automatic generation of arbitrarily complex types works just as well. Each test can be run a configurable number of times, the default is 100 but it can be set to millions.
+Property testing extends this idea, the test framework to automatically generates test parameters, instead of them being supplied by the developer via [InlineData(xx)] attributes. This example uses has simple 'int' parameter, but automatic generation of arbitrarily complex types works just as well. Each test can be run a configurable number of times, the default is 100 but it can be set to millions. In a sense, running a property test is running a search for undiscovered bugs, unit tests fulfill a different purpose.
 
-In the test below random but valid DerivativeSecurityListRequest FIX messages are serialized and deserialized, and the output compared with the input.
+
+In the test below random but valid DerivativeSecurityListRequest FIX messages are serialized and deserialized, and the output is compared with the input.
 
 ```F#
 [<PropTest>]
@@ -43,20 +44,21 @@ Tests like WriteReadRoundTrip_DerivativeSecurityListRequest can be run in the Vi
 
 
 
-## QuickFix(N|J) Echo
+## Using property testing to send random FIX messages to QuickFixJ and QuickFixN
 
-FsCheck type instance generation can be bent to other purposes, such as generating FIX messages in FsFIXEcho which sends the messages to some other FIX engine modified to just return the message it received, after deserializing and reserializing it. QuickFixN and QuickFixJ (C# and Java open source FIX engines) both come with 'Executor' demo projects, these were modified to do just this. FsFIXEcho has just enough FIX session logic to be able to login to the modified QuickFix executors, and runs a property test the checks that message that has done the full round-trip is the same as the original outgoing message.
+FsCheck type instance generation can be bent to other purposes, such as generating FIX messages in FsFIXEcho which sends the messages to some other FIX engine application, coded to return the message it received after deserializing and reserializing it. QuickFixN and QuickFixJ (C# and Java open source FIX engines) both come with 'Executor' demo projects, these were modified to do just that. FsFIXEcho has just enough FIX session logic to be able to login to the modified QuickFix(J|N)executors, and runs a property test that checks that the  message that has done the full round-trip is the same as the original outgoing message.
 
-FsFIXCodeGen generates F# code from a FIX44.xml spec, but there is more than one version of this file, QuickFixJ's version differs slightly from QuickFixN's. The QuickFixN version is downloaded from the QuickFixN GitHub repository by [paket](https://fsprojects.github.io/Paket/) when building FsFIX. FsFIXCodeGen will pick this version by default. To test against QuickFiXj first run FsFIXCodeGen against the version of FIX44.xml that comes with it (pass the path to FsFIXCodeGen as a command-line parameter).
+FsFIXCodeGen generates F# code from a FIX44.xml spec, but there is more than one version of this file, QuickFixJ's version differs slightly from QuickFixN's. To test against QuickFiXJ first run FsFIXCodeGen against the version of FIX44.xml that comes with QuickFiXJ (pass the path to FsFIXCodeGen as a command-line parameter). 
 
+This 'echo' testing found issues with FsFIX, 
 
-
-## using FsFIX echo with QuickfixN and QuickfixJ
 
 
 ### FsFix issues (now resolved)
 
-FsFIX originally assumed that all fields are in the order they appear in the FIX XML spec, this assumption was incorrect, and QuickFixN and QuickFixJ do not work this way, messages sent to either can be echo'd back with the fields in a different order.
+1. FsFIX originally assumed that all fields are in the order they appear in the FIX XML spec, this assumption was incorrect, and QuickFixN and QuickFixJ do not work this way, messages sent to either can be echo'd back with the fields in a different order.
+
+2. After fixing the issue above FsFIX was confused when an optional field can appear in the message itself, and again inside repeating group inside the message. Specifically the SettlementInstructions message contains an optional SettlInstSource field, but this field also appears inside a repeating group inside the SettlementInstructions message.
 
 
 ### FIX spec issues
@@ -95,16 +97,13 @@ FsFIX treats these fields as multi-case discriminated unions, and pattern matche
 ### QuickFixN issues
 
 1. DateTimes and Times involving [leap-seconds](https://en.wikipedia.org/wiki/Leap_second) are not recognized as valid
+
 2. RawData fields containing field or tag-value separators raise formatting errors. RawData fields are allowed by the FIX spec to contain separators, both QuickFixJ and FsFIX handle RawData fields correctly.
 
-### QuickFixJ issues
+### QuickFixJ possible issue
 
-FsFIXEcho did not find any issues with QuickFixJ, although the BusinessMessageReject message did cause QuickFixJH echo to stop replying to FsFIXEcho, maybe because BusinessMessageReject is an 'admin like' message, and QuickFixJ session logic expects the rejection to refer to an earlier message sent to FsFIXEcho.
+FsFIXEcho did not find any issues with QuickFixJ, although the BusinessMessageReject message did cause QuickFixJH echo to appear to hang, maybe because BusinessMessageReject is an 'admin like' message, and QuickFixJ session logic expects the rejection to refer to an earlier message sent to FsFIXEcho.
 
-
-
-
-* the [<PropTest>] attribute does not come with FsCheck but is easy to define
 
 
 

@@ -293,10 +293,11 @@ public class UserRequest extends Message {
 }
 ```
 
-### Overall size difference of FIX4.4 generated code 
+### Comparing the overall size difference of FIX4.4 generated code in QuickFIXJ and FsFIX
 
-FsFIX all generated FIX4.4 source files side: 2.10 MB (2,209,608 bytes) - 13 files
-QuickFIXJ generated FIX4.4 messages only: 7.38 MB (7,745,299 bytes) - 121 files
+FsFIX generated FIX4.4 source files, including fields, components, groups and factory functions side: 2.10 MB (2,209,608 bytes) - 13 files
+
+QuickFIXJ generated FIX4.4 message (components and groups are inline) only: 7.38 MB (7,745,299 bytes) - 121 files
 
 
 
