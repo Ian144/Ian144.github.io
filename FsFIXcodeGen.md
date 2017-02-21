@@ -1,9 +1,6 @@
 # FsFIX Code Generation
 
 
-## Generating FsFIX F# from FIX4.4.xml and generating FIX4.4.xml from FsFIX
-
-### TBD
 
 
 
