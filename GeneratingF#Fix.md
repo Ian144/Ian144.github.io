@@ -8,7 +8,7 @@ F# requires modules, types, function definitions etc to be defined before they a
 FsFIX represents FIX Components are represented as F# ADTs, but they have no effect in the byte representation of the FIX message. 
 
 
-### Merging Groups
+## Merging Repeating Groups
 
 Groups in the FIX4.4.xml spec are defined inline in their parent messages, groups (groups can contain groups) and components. There are many groups with the same name, sometimes containing the same members, sometimes not. FsFIX code generation finds the most common case of each set of groups with the same name, and gives it a separate F# definition with that name, other instances of groups types are generated with a name that has been prefixed with the of the containing type. 
 
