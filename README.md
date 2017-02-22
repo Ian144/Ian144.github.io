@@ -5,8 +5,11 @@
 
 
 There is a myth that F# is only useful for mathematical and scientific applications. This article describes using F# to model [FIX](https://en.wikipedia.org/wiki/Financial_Information_eXchange) messages, which is neither mathematical or scientific. Why should you care? what does F# give you that C# or Java does not? FsFIX is going to show that 
+
 1. with F# some runtime errors become compile time errors.
+
 2. property based testing (possible in but not facilitated by C# and Java) is supercharged compared to unit testing<sup>1</sup> and will catch some of the runtime errors that remain.
+
 3. that the code base is smaller and has less boilerplate.
 
 FIX message code generation is the first stage of project to build a fully fledged FIX engine using F#. I have not heard of anyone using a functional programming language to build a FIX engine, I thought Algebraic Data Types (ADTs) would be a good match for representing FIX messages and that it would be interesting to try. For performance reasons a more imperative coding style has been used for the message reading and writing, though this code has plenty of scope for being tuned.
