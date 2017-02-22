@@ -31,7 +31,7 @@ The source for FsFIX can be found [here](https://github.com/Ian144/fsFixGen). At
 - FIXEcho: sends, receives and compares random but valid FIX messages sent to and received from some other FIX engine
 - FsFIX: generated F# FIX type
 - PropertyTests
-- ReverseXMLGen: generates a (partial )FIX XML specification from F# FIX types
+- ReverseXMLGen: generates a (partial) FIX XML specification from F# FIX types
 - UnitTests
 
 
