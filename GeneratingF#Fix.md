@@ -12,14 +12,17 @@ FsFIX represents FIX Components are represented as F# ADTs, but they have no eff
 
 Groups in the FIX4.4.xml spec are defined inline in their parent messages, groups (groups can contain groups) and components. There are many groups with the same name, sometimes containing the same members, sometimes not. FsFIX code generation finds the most common case of each set of groups with the same name, and gives it a separate F# definition with that name, other instances of groups types are generated with a name that has been prefixed with the of the containing type. 
 
-### the most common 'Legs' group
+### The most common 'Legs' group
 
 ```F#
 type NoLegsGrp = {
     InstrumentLegFG: InstrumentLegFG // component
     }
+```
 
-### Another 'Legs' group containing extra fields, and with the name of the parent type 'TradeCaptureReport' prefixed to get the full type name.
+### Another 'Legs' group containing extra fields and groups
+
+and with the name of the parent type 'TradeCaptureReport' prefixed to get the full type name.
 
 ```F#
 type TradeCaptureReportAckNoLegsGrp = {
@@ -37,7 +40,7 @@ type TradeCaptureReportAckNoLegsGrp = {
     LegLastPx: LegLastPx option
     }
 ```
-The 'base' group name in FsFIX F# is that of the field containing the number of repeated group instances suffixed with 'Grp'
+(The 'base' group name in FsFIX F# is that of the field containing the number of repeated group instances suffixed with 'Grp')
 
 
 ### FsFIX merges length + data field pairs
