@@ -330,4 +330,22 @@ QuickFIXJ generated FIX4.4 messages: 7.38mb - 121 files
 QuickFIXN generated FIX4.4 messages: 14.4mb - 94 files
 
 
+## DOWNSIDES OF THIS APPROACH REGARDING CONSICENESS
+
+
+    let qsr = MkQuoteStatusRequest(
+                MkInstrument (Fix44.Fields.Symbol "ABCDE"),
+                MkFinancingDetails (),
+                MkParties () )
+
+    let legA = {MkInstrumentLegFG (LegSymbol "BCDEF") with LegSymbolSfx = "PQRS" |> LegSymbolSfx |> Some} |> MkNoLegsGrp
+    let legB = {MkInstrumentLegFG (LegSymbol "CDEFG") with LegSymbolSfx = "QRST" |> LegSymbolSfx |> Some} |> MkNoLegsGrp
+    let legC = {MkInstrumentLegFG (LegSymbol "DEFGH") with LegSymbolSfx = "RSTU" |> LegSymbolSfx |> Some} |> MkNoLegsGrp
+
+    let legsGrp = [legA; legB; legC] |> Some
+
+    let qsr2  = {qsr with NoLegsGrp = legsGrp}
+
+
+
 ## CONCLUSION TODO

@@ -126,7 +126,7 @@ To remove this ambiguity while keeping components first class (for fsFix user co
 
 ## Generating FIX4.4.xml from FsFIX F#
 
-The FsFIX.ReverseXMLGen project recreates the <messages> and <components> elements of FIX4.4.xml from FsFIX F# types. This is done as a check, to confirm that the merging of repeating groups has been done correctly, and to view the effect of the code generation rules mentioned above. 
+The FsFIX.ReverseXMLGen project recreates the <messages> and <components> elements of FIX4.4.xml from FsFIX F# types. This is done as a check, to confirm that the merging of repeating groups has been done correctly, and to view the effect of the code generation rules mentioned above. This would be difficult with QuickFIX C# or Java code.
 
 
 
