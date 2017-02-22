@@ -84,10 +84,27 @@ type RawData =
      member x.Value = let (RawData v) = x in v
 ```
 
+### Simple string, int etc FIX fields are wrapped by a single-case discriminated union.
+
+Once wrapped, type checking will raise compilation errors if code attempts to assign an AdvID value to an Account field
+
+```F#
+type Account =
+    |Account of string
+     member x.Value = let (Account v) = x in v
+
+
+type AdvId =
+    |AdvId of string
+     member x.Value = let (AdvId v) = x in v
+```
+
+
+
 
 ## other FsFIX characteristics and features
 - Multicase FIX fields are represented by Multicase ADT discriminated unions (DUs)
-- Single value Fix fields are represented by a single-case DU, not raw strings, ints etc
+
 - Fields do not know their tag, field read/write functions do know their tag
 - Optional fields, groups or components are wrapped in the F# Option type
 - FIX message reading detects unexpected fields in FIX buffers

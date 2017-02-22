@@ -8,7 +8,7 @@ FsFixGen creates ADTs to represent FIX messages, groups and fields from the same
 
 ## ADTs can move some runtime errors to compile time
 
-Some FIX fields have a finite set of valid values, such as 'PosType', in quickFix/Java PosType this looks like
+### Some FIX fields have a finite set of valid values, such as 'PosType', in quickFix/Java PosType this looks like
 
 ```Java
 public class PosType extends StringField {
@@ -79,6 +79,25 @@ type PosType =
     | CrossMarginQty
     | IntegralSplit
 ```
+
+### Simple FIX fields are wrapped by a single-case discriminated union.
+
+(by 'simple' I mean fields that do not have a finite set of valid cases, such as PosType)
+
+Once wrapped, type checking will raise compilation errors if code attempts to assign an AdvID value to an Account field
+
+```F#
+type Account =
+    |Account of string
+     member x.Value = let (Account v) = x in v
+
+
+type AdvId =
+    |AdvId of string
+     member x.Value = let (AdvId v) = x in v
+```
+
+
 
 ### What FsFIX does not do for you (and a little bit more of what it does)
 
