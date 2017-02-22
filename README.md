@@ -18,7 +18,7 @@ The source for FsFIX can be found [here](https://github.com/Ian144/fsFixGen). At
 
 [The unreasonable effectiveness of Algebraic Data Types](ADTs.md)
 
-[Generating F# from FIX4.4.xml (and generating FIX xml from F#)](GeneratingF#Fix.md)
+[Generating F# from FIX4.4.xml (and generating FIX xml from F#)](GeneratingFsFix.md)
 
 [Property testing FsFIX message read-write code](PropertyTesting.md)
 
