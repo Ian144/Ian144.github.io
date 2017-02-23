@@ -10,7 +10,7 @@ FIX Components are represented in FsFIX, but they have no effect in the byte rep
 
 ## Merging repeating groups
 
-Groups in the FIX4.4.xml spec are defined inline in their parent messages, groups (groups can contain groups) and components. There are many groups with the same name, sometimes containing the same members, sometimes not. FsFIX code generation finds the most common case of each set of groups with the same name, and gives it a separate F# definition with that name, other instances of groups types are generated with a name that has been prefixed with the of the containing type. 
+Groups in the FIX4.4.xml spec are defined inline in their parent messages, groups (groups can contain groups) and components. There are many groups with the same name, sometimes containing the same members, sometimes not. FsFIX code generation finds the most common case of each set of groups with the same name, and gives it a separate F# definition with that name, other instances of groups types with the same base name are generated with a name that has been prefixed with that of the containing type. 
 
 ### The most common 'Legs' group
 

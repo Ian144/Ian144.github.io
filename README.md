@@ -14,7 +14,7 @@ There is a myth that F# is only useful for mathematical and scientific applicati
 
 FIX message code generation is the first stage of project to build a fully fledged FIX engine using F#. I have not heard of anyone using a functional programming language to build a FIX engine, I thought Algebraic Data Types (ADTs) would be a good match for representing FIX messages and that it would be interesting to try. For performance reasons a more imperative coding style has been used for the message reading and writing, though this code has plenty of scope for being tuned.
 
-The source for FsFIX can be found [here](https://github.com/Ian144/fsFixGen). At the moment FsFIX can be used to connect to applications using other FIX 4.4 engines and feed them with random but valid FIX messages, the idea being to test the parsing machinery of both FIX frameworks. Errors were found in QuickFIXN (an open-source C# FIX engine) and FsFIX (found and fixed) in this manner, and also an issue with the FIX spec
+The source for FsFIX can be found [here](https://github.com/Ian144/fsFix). At the moment FsFIX can be used to connect to applications using other FIX 4.4 engines and feed them with random but valid FIX messages, the idea being to test the parsing machinery of both FIX frameworks. Errors were found in QuickFIXN (an open-source C# FIX engine) and FsFIX (found and fixed) in this manner, as was an issue with the FIX 4.4 spec
 
 [The unreasonable effectiveness of Algebraic Data Types](ADTs.md)
 
@@ -43,7 +43,7 @@ My other site, an F# key-value store: https://fredisnet.org/
 
 Interested in hiring me or asking me questions about FsFIX? my email address is my GitHub user-name followed by '@hotmail.com'
 
-
+##
 
 <sup>1</sup> unit tests are still useful, property testing is not always appropriate.
 

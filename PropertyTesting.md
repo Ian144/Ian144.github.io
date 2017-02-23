@@ -4,7 +4,7 @@
 
 ## What is property based testing
 
-Consider a progression from 'unit tests' to 'theory based unit tests with inline data' to property tests. F# code can be unit tested using the same tools as C#. The Xunit test framework allows different sets of parameters to be passed to unit tests using the [Theory] and [InlineData(99)] attributes, effectively creating a different unit test for each data set.
+Consider a progression from 'unit tests' to 'theory based unit tests with inline data' to 'property based tests'. F# code can be unit tested using the same tools as C#. The Xunit test framework allows different sets of parameters to be passed to unit tests using the [Theory] and [InlineData(99)] attributes, effectively creating a different unit test for each data set.
 
 ```C#
 [Theory]
@@ -35,12 +35,11 @@ let WriteReadRoundTrip_DerivativeSecurityListRequest (msgIn:Fix44.Messages.Deriv
 
 The property test framework used by FsFIX is [FsCheck](https://fscheck.github.io/FsCheck), good examples of using property testing can be found [here](http://fsharpforfunandprofit.com/posts/property-based-testing).
 
-If the type being generated cannot represent invalid states, and FsCheck runs the test a very large number of times then it becomes more likely that the code under test satisfies the test property: "code confidence = numTestRuns / numValidStates". No one claims this will find all bugs, but it is likely to find bugs that would not be found with other techniques. Property testing is not a silver bullet, but it is a useful and underused (outside of functional programming) tool.
+If the type being generated cannot represent invalid states, and FsCheck runs the test a very large number of times then it becomes more likely that the code under test satisfies the test property. No one claims this will find all bugs, but it is likely to find bugs that would not be found with other techniques. Property testing is not a silver bullet, but it is a useful and underused (outside of functional programming) tool.
 
 Unit tests are still useful, for instance if you want to test that your parsing code can handle invalid input, in FsFIX this is used to test that fields that should not be in a buffer for a particular message type are detected.
 
 Tests like WriteReadRoundTrip_DerivativeSecurityListRequest can be run in the Visual Studio test explorer or by using TestDriven.net. FsCheck integrates with Xunit to enable this.
-
 
 
 ## Using property testing to send random FIX messages to QuickFixJ and QuickFixN
