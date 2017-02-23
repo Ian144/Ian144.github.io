@@ -61,7 +61,7 @@ FsFIXCodeGen generates F# code from a FIX44.xml spec, but there is more than one
 
 ### FIX 4.4 issues
 
-The MiscFeeType and MassCancelRejectReason fields are defined by the FIX spec as Char fields, but MiscFeeType.Agent, MiscFeeType.CONVERSION, MiscFeeType.PER_TRANSACTION and MassCancelRejectReason.OTHER have two character values. This did not create test failures when running FsFIX property tests, it did show up when testing FsFIXEcho against QuickFixN, which understandably assumed Char fields should contribute 1 to the length. This looks like an issue with FIX4.4, as these fields are of type 'String' in FIX5.0.
+The MiscFeeType and MassCancelRejectReason fields are defined by the FIX spec as Char fields, but MiscFeeType.Agent, MiscFeeType.CONVERSION, MiscFeeType.PER_TRANSACTION and MassCancelRejectReason.OTHER have two character values. This did not create test failures when running FsFIX property tests, it did show up when testing FsFIXEcho against QuickFixN, which understandably assumed Char fields should contribute 1 to the length. This looks like an issue with FIX4.4, these fields are of type 'String' in FIX5.0.
 
 ```xml
 <field name="MiscFeeType" number="139" type="CHAR">
