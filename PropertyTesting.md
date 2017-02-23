@@ -4,7 +4,7 @@
 
 ## What is property based testing
 
-Consider a progression from 'unit tests' to 'theory based unit tests with inline data' to 'property based tests'. F# code can be unit tested using the same tools as C#. The Xunit test framework allows different sets of parameters to be passed to unit tests using the [Theory] and [InlineData(99)] attributes, effectively creating a different unit test for each data set.
+Consider a progression from 'unit tests' to 'theory based unit tests with inline data' to 'property based tests with randomised data'. F# code can be unit tested using the same tools as C#. The Xunit test framework allows different sets of parameters to be passed to unit tests using the [Theory] and [InlineData(99)] attributes, effectively creating a different unit test for each data set.
 
 ```C#
 [Theory]
@@ -59,9 +59,9 @@ FsFIXCodeGen generates F# code from a FIX44.xml spec, but there is more than one
 2. After fixing the issue above, FsFIX was confused when an optional field can appear in the message itself and again inside a repeating group inside the message. Specifically the SettlementInstructions message contains an optional SettlInstSource field, but this field also appears inside a repeating group inside the SettlementInstructions message.
 
 
-### FIX 4.4 specification issues
+### FIX 4.4 issues
 
-The MiscFeeType and MassCancelRejectReason fields are defined by the FIX spec as Char fields, but MiscFeeType.Agent, MiscFeeType.CONVERSION, MiscFeeType.PER_TRANSACTION and MassCancelRejectReason.OTHER have two character values. This did not create test failureswhen running FsFIX property tests, it did show up when testing FsFIXEcho against QuickFixN, which understandably assumed Char fields should contribute 1 to the length. This looks like an issue with FIX4.4, as these fields are of type 'String' in FIX5.0.
+The MiscFeeType and MassCancelRejectReason fields are defined by the FIX spec as Char fields, but MiscFeeType.Agent, MiscFeeType.CONVERSION, MiscFeeType.PER_TRANSACTION and MassCancelRejectReason.OTHER have two character values. This did not create test failures when running FsFIX property tests, it did show up when testing FsFIXEcho against QuickFixN, which understandably assumed Char fields should contribute 1 to the length. This looks like an issue with FIX4.4, as these fields are of type 'String' in FIX5.0.
 
 ```xml
 <field name="MiscFeeType" number="139" type="CHAR">

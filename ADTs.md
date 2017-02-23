@@ -3,7 +3,7 @@
 
 Structs and classes are pretty much all there is when it comes to designing your own types in object oriented programming languages. The ML branch of functional programming, which includes F#, has an alternative - Algebraic Data Types (ADTs). A good introduction to ADTs, why they are useful, and using them in F# is Scott Wlaschins NDC talk: [Domain modelling with the F# type system](https://vimeo.com/97507575), also useful is the [F# wikibook](https://en.wikibooks.org/wiki/F_Sharp_Programming/Discriminated_Unions). ADTs can be concise, facilitate [making invalid states unrepresentable](http://fsharpforfunandprofit.com/posts/designing-with-types-making-illegal-states-unrepresentable/) and work well with property based testing, see [here](http://fsharpforfunandprofit.com/posts/property-based-testing) or [here](https://fscheck.github.io/FsCheck/QuickStart.html). 
 
-FsFixGen creates ADTs to represent FIX messages, groups and fields from the same xml FIX specification used as source by the Java and C# versions of quickfix. FsFixGen also generates code to read and write FIX messages to and from byte arrays. The generated F# FIX code has been checked in (you don't need to generate it yourself to view it, although you can), and can be found in the FsFIX subproject. There are several different versions of FIX, FsFIXGen currently works for FIX 4.4, but should work with other versions with a little modification. 
+FsFixGen creates ADTs to represent FIX messages, groups and fields from the same xml FIX specification used as source by the Java and C# versions of QuickFix. FsFixGen also generates code to read and write FIX messages to and from byte arrays. The generated F# FIX code has been checked in (you don't need to generate it yourself to view it, although you can), and can be found in the FsFIX subproject. There are several different versions of FIX, FsFIXGen currently works for FIX 4.4, but should work with other versions with a little modification. 
 
 
 ## ADTs can move some runtime errors to compile time
@@ -104,7 +104,7 @@ type AdvId =
 With one exception, FsFIX F# can only introduce constraints, and thereby compile time errors, if those constraints are expressed in the FIX XML spec (i.e. FIX4.4.xml), such as the set of legal values PosType can have. If fields in the same message have constraints such that the value of one affects legal values of the other, possibly expressed in FIX documentation but not in FIX4.4.xml, then FsFIX cannot help you there. The exception is for pairs of fields where one field contains the length of the data in the other, e.g. RawDataLength and RawData. FsFIX types store the data in an array and elides the RawDataLength field. When it is time to write the message containing RawData, the value of RawDataLength is taken from the length of the array, it cannot be incorrectly set by buggy code elsewhere, see [merging length + data field pairs](GeneratingFsFIX.md).
 
 
-## ADTs are consise
+## ADTs are concise
 
 The FIX4.4.xml spec defines the UserRequest message like this
 
