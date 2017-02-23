@@ -4,7 +4,7 @@
 
 ## What is property based testing
 
-Consider a progression from 'unit tests' to 'theory based unit tests with inline data' to 'property based tests with randomised data'. F# code can be unit tested using the same tools as C#. The Xunit test framework allows different sets of parameters to be passed to unit tests using the [Theory] and [InlineData(99)] attributes, effectively creating a different unit test for each data set.
+Consider a progression from 'unit tests' to 'theory based unit tests with few sets of inline data' to 'property based tests with a large set randomised data'. F# code can be unit tested using the same tools as C#. The Xunit test framework allows different sets of parameters to be passed to unit tests using the [Theory] and [InlineData(99)] attributes, effectively creating a different unit test for each data set.
 
 ```C#
 [Theory]
@@ -17,7 +17,7 @@ public void MyTheory(char value)
 }
 ```
 
-Property testing extends this idea, instead of test data being supplied by the developer via [InlineData(xx)] attributes, the test framework automatically generates test data. Automatic generation of instances for arbitrarily complex types works just as well as for primative types. Each property test can be run a configurable number of times, the default is 100 but it can be set to millions (which will take a long time to run). In a sense, running a property test is running a search for undiscovered bugs and incorrect assumptions, unit tests fulfill a different purpose.
+Property testing extends this idea, instead of test data being supplied by the developer via [InlineData(xx)] attributes, the test framework automatically generates test data. Automatic generation of instances for arbitrarily complex types works just as well as for primative types. Each property test can be run a configurable number of times, the default is 100 but it can be set to millions (which will take a long time to run). In a sense, running a property test is running a search for undiscovered bugs and incorrect assumptions.
 
 In the FsFIX test below, random but valid DerivativeSecurityListRequest FIX messages are serialized and deserialized, then the output is compared with the input.
 
@@ -105,9 +105,3 @@ FsFIXEcho did not find any issues with QuickFixJ, although the BusinessMessageRe
 
 
 ### CONCLUSION TODO
-
-
-
-
-
-
