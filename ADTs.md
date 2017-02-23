@@ -101,9 +101,7 @@ type AdvId =
 
 ### What FsFIX does not do for you (and a little bit more of what it does)
 
-With one exception, FsFIX F# can only introduce constraints, and thereby compile time errors, if those constraints are expressed in the FIX XML spec (i.e. FIX4.4.xml), such as the set of legal values PosType can have. If fields in the same message have constraints such that the value of one affects legal values of the other, possibly expressed in FIX documentation, then FsFIX cannot help you there. The exception is for pairs of fields where one field contains the length of the data in the other, e.g. RawDataLength and RawData. FsFIX types store the data in an array and elides the RawDataLength field. When it is time to write the message containing RawData, the value of RawDataLength is taken from the length of the array, it cannot be incorrectly set by buggy code elsewhere, see [FsFIX merges length + data field pairs](FsFIXcodeGen.md).
-
-
+With one exception, FsFIX F# can only introduce constraints, and thereby compile time errors, if those constraints are expressed in the FIX XML spec (i.e. FIX4.4.xml), such as the set of legal values PosType can have. If fields in the same message have constraints such that the value of one affects legal values of the other, possibly expressed in FIX documentation but not in FIX4.4.xml, then FsFIX cannot help you there. The exception is for pairs of fields where one field contains the length of the data in the other, e.g. RawDataLength and RawData. FsFIX types store the data in an array and elides the RawDataLength field. When it is time to write the message containing RawData, the value of RawDataLength is taken from the length of the array, it cannot be incorrectly set by buggy code elsewhere, see [merging length + data field pairs](FsFIXcodeGen.md).
 
 
 ## ADTs are consise
@@ -330,22 +328,38 @@ QuickFIXJ generated FIX4.4 messages: 7.38mb - 121 files
 QuickFIXN generated FIX4.4 messages: 14.4mb - 94 files
 
 
-## DOWNSIDES OF THIS APPROACH REGARDING CONSICENESS
 
 
-    let qsr = MkQuoteStatusRequest(
-                MkInstrument (Fix44.Fields.Symbol "ABCDE"),
-                MkFinancingDetails (),
-                MkParties () )
 
-    let legA = {MkInstrumentLegFG (LegSymbol "BCDEF") with LegSymbolSfx = "PQRS" |> LegSymbolSfx |> Some} |> MkNoLegsGrp
-    let legB = {MkInstrumentLegFG (LegSymbol "CDEFG") with LegSymbolSfx = "QRST" |> LegSymbolSfx |> Some} |> MkNoLegsGrp
-    let legC = {MkInstrumentLegFG (LegSymbol "DEFGH") with LegSymbolSfx = "RSTU" |> LegSymbolSfx |> Some} |> MkNoLegsGrp
+###  quickFix Java vs the equivalent fsFix F#
 
-    let legsGrp = [legA; legB; legC] |> Some
+```Java
+    MDReqID reqId = new MDReqID("MDRQ-" + String.valueOf(System.currentTimeMillis()));
+    MarketDepth depthType = new MarketDepth(1);
+    MDUpdateType updateType = new MDUpdateType(MDUpdateType.INCREMENTAL_REFRESH);
+    MarketDataRequest mdr = new MarketDataRequest(reqId, subscriptionType, depthType);
+    mdr.setField(updateType);
+    MarketDataRequest.NoRelatedSym instruments = new MarketDataRequest.NoRelatedSym();
+    instruments.set(new Symbol(currencyPair));
+    mdr.addGroup(instruments);
+    mdr.setField(new NoMDEntryTypes(2));
+    MarketDataRequest.NoMDEntryTypes group = new MarketDataRequest.NoMDEntryTypes();
+    group.set(new MDEntryType(MDEntryType.BID));
+    group.set(new MDEntryType(MDEntryType.OFFER));
+    mdr.addGroup(group);
+```
 
-    let qsr2  = {qsr with NoLegsGrp = legsGrp}
 
+```F#    
+    let ms = System.DateTimeOffset.Now.ToUnixTimeMilliseconds()
+    let mdr = MkMarketDataRequest(
+                MDReqID (sprintf "MDRQ-%d" ms),
+                SubscriptionRequestType.SnapshotPlusUpdates,
+                MarketDepth 1,
+                [MDEntryType.Bid; MDEntryType.Offer] |> List.map MkNoMDEntryTypesGrp,
+                [MkInstrument (Fix44.Fields.Symbol "EUR/USD")] |> List.map MkMarketDataRequestNoRelatedSymGrp
+                )
+```
 
 
 ## CONCLUSION TODO
