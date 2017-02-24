@@ -57,7 +57,7 @@ quickfix.field.PosType pt = new quickfix.field.PosType("any old string");
 
 In FsFix F# it is impossible to express such an error in compilable code, the F# PosType discriminated union can only take the set of values defined by the type. 
 
-```fsharp
+```F#
 type PosType =
     | TransactionQuantity
     | IntraSpreadQty
@@ -101,7 +101,7 @@ type AdvId =
 
 ### What FsFIX does not do for you (and a little bit more of what it does)
 
-With one exception, FsFIX F# can only introduce constraints, and thereby compile time errors, if those constraints are expressed in the FIX XML spec (i.e. FIX4.4.xml), such as the set of legal values PosType can have. If fields in the same message have constraints such that the value of one affects legal values of the other, possibly expressed in FIX documentation but not in FIX4.4.xml, then FsFIX cannot help you there. The exception is for pairs of fields where one field contains the length of the data in the other, e.g. RawDataLength and RawData. FsFIX types store the data in an array and elides the RawDataLength field. When it is time to write the message containing RawData, the value of RawDataLength is taken from the length of the array, it cannot be incorrectly set by buggy code elsewhere, see [merging length + data field pairs](GeneratingFsFIX.md).
+With one exception, FsFIX F# can only introduce constraints, and thereby compile time errors, if those constraints are expressed in the FIX XML spec (i.e. FIX4.4.xml), such as the set of legal values PosType can take. If different fields in the same message have constraints such that the value of one affects legal values of the other, possibly expressed in FIX documentation but not in FIX4.4.xml, then FsFIX cannot help you there. The exception is for pairs of fields where one field contains the length of the data in the other, e.g. RawDataLength and RawData. FsFIX types store the data in an array and elide the RawDataLength field. When it is time to write the message containing RawData, the value of RawDataLength is taken from the length of the array, it cannot be incorrectly set by buggy code elsewhere, see [merging length + data field pairs](GeneratingFsFIX.md).
 
 
 ## ADTs are concise
@@ -133,7 +133,7 @@ type UserRequest = {
     }
 ```
 
-But to be fair to Java and C#, creating FsFIX messages that have many optional fields could be tedious, so helper factory functions are also generated like this one below for UserRequest. Some message types have many optional fields, there are 119 in an ExecutionReport, typing all the 'None's would be painfull.
+But to be fair to Java and C#, creating FsFIX messages that have many optional fields could be tedious, so helper factory functions are also generated like this one below for UserRequest. Some message types have many optional fields, there are 119 in an ExecutionReport, typing all the 'None's would be painful.
 
 ```F#
 let MkUserRequest (userRequestID:UserRequestID, userRequestType:UserRequestType, username:Username) : UserRequest = {

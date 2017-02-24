@@ -2,9 +2,9 @@
 
 
 
-## What is property based testing
+## What is property based testing?
 
-Consider a progression from 'unit tests' to 'theory based unit tests with few sets of inline data' to 'property based tests with a large set randomised data'. F# code can be unit tested using the same tools as C#. The Xunit test framework allows different sets of parameters to be passed to unit tests using the [Theory] and [InlineData(99)] attributes, effectively creating a different unit test for each data set.
+Consider a progression from 'unit tests' to 'theory based unit tests with few sets of inline data' to 'property based tests with a large set randomized data'. F# code can be unit tested using the same tools as C#. The Xunit test framework allows different sets of parameters to be passed to unit tests using the [Theory] and [InlineData(99)] attributes, effectively creating a different unit test for each data set.
 
 ```C#
 [Theory]
@@ -17,7 +17,7 @@ public void MyTheory(char value)
 }
 ```
 
-Property testing extends this idea, instead of test data being supplied by the developer via [InlineData(xx)] attributes, the test framework automatically generates test data. Automatic generation of instances for arbitrarily complex types works just as well as for primative types. Each property test can be run a configurable number of times, the default is 100 but it can be set to millions (which will take a long time to run). In a sense, running a property test is running a search for undiscovered bugs and incorrect assumptions.
+Property testing extends this idea, instead of test data being supplied by the developer via [InlineData(xx)] attributes, the test framework automatically generates test data. Automatic generation of instances for arbitrarily complex types works just as well as for primitive types. Each property test can be run a configurable number of times, the default is 100 but it can be set to millions (which will take a long time to run). In a sense, running a property test is running a search for undiscovered bugs and incorrect assumptions.
 
 In the FsFIX test below, random but valid DerivativeSecurityListRequest FIX messages are serialized and deserialized, then the output is compared with the input.
 
@@ -44,7 +44,7 @@ Tests like WriteReadRoundTrip_DerivativeSecurityListRequest can be run in the Vi
 
 ## Using property testing to send random FIX messages to QuickFixJ and QuickFixN
 
-FsCheck type instance generation can be bent to other purposes, such as generating random but valid FIX messages in FsFIXEcho, which sends the messages to some other FIX engine application, coded to return the message it received after deserializing and reserializing it. QuickFixN and QuickFixJ (C# and Java open source FIX engines) both come with 'Executor' demo projects, these were modified to do just that. FsFIXEcho has just enough FIX session logic to be able to login to the modified QuickFix executors.  FsFIXEcho runs a property test that sends messages to QuickFix and checks that the  message recevied in reply  is the same as the outgoing message.
+FsCheck type instance generation can be bent to other purposes, such as generating random but valid FIX messages in FsFIXEcho, which sends the messages to some other FIX engine application, coded to return the message it received after deserializing and reserializing it. QuickFixN and QuickFixJ (C# and Java open source FIX engines) both come with 'Executor' demo projects, these were modified to do just that. FsFIXEcho has just enough FIX session logic to be able to login to the modified QuickFix executors.  FsFIXEcho runs a property test that sends messages to QuickFix and checks that the  message received in reply  is the same as the outgoing message.
 
 FsFIXCodeGen generates F# code from a FIX44.xml spec, but there is more than one version of this file, QuickFixJ's version differs slightly from QuickFixN's. To test against QuickFiXJ first run FsFIXCodeGen against the version of FIX44.xml that comes with QuickFiXJ (pass the path to FsFIXCodeGen as a command-line parameter). 
 
@@ -100,7 +100,7 @@ FsFIX treats these fields as multi-case discriminated unions, and pattern matche
 
 ### QuickFixJ possible issue
 
-FsFIXEcho did not find any issues with QuickFixJ, although the BusinessMessageReject message did cause QuickFixJH echo to appear to hang, maybe because BusinessMessageReject is an 'admin like' message, and QuickFixJ session logic expects the rejection to refer to an earlier message sent to FsFIXEcho.
+FsFIXEcho did not find any issues with QuickFixJ, although the BusinessMessageReject message did cause QuickFixJ executor_echo process to appear to hang, maybe because BusinessMessageReject is an 'admin like' message, and QuickFixJ session logic expects the rejection to refer to an earlier message sent to FsFIXEcho.
 
 
 

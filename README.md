@@ -27,12 +27,12 @@ The source for FsFIX can be found [here](https://github.com/Ian144/fsFix). At th
 ##
 
 ## FsFIX.sln projects
-- Benchmark: times FsFIX reading and writing functions
-- CodeGEN: generates F# FIX types from a FIX XML spec (currently only works with FIX4.4)
+- FsFIXCodeGEN: generates F# FIX types from a FIX XML spec (currently only works with FIX4.4)
+- FsFIXReverseGen: generates a (partial, no fields) FIX XML specification from F# FsFIX types
 - FIXEcho: sends, receives and compares random but valid FIX messages sent to and received from some other FIX engine
-- FsFIX: generated F# FIX type
+- FsFIX: generated F# FIX types plus message reading and writing functions
+- Benchmark: performance timings for FIX message reading and writing functions
 - PropertyTests
-- ReverseXMLGen: generates a (partial) FIX XML specification from F# FIX types
 - UnitTests
 
 ## About the author
