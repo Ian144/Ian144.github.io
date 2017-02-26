@@ -319,6 +319,8 @@ public class UserRequest extends Message {
 
 ### Creating a MarketDataRequest message -  QuickFixJ vs the equivalent FsFIX code
 
+QuickFIXJ
+
 ```Java
     MDReqID reqId = new MDReqID("MDRQ-" + String.valueOf(System.currentTimeMillis()));
     MarketDepth depthType = new MarketDepth(1);
@@ -335,6 +337,7 @@ public class UserRequest extends Message {
     mdr.addGroup(group);
 ```
 
+FsFIX
 
 ```F#    
     let ms = System.DateTimeOffset.Now.ToUnixTimeMilliseconds()
