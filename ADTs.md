@@ -360,6 +360,6 @@ QuickfixN:  7,523,220
 (FIX4.4.xml: 338kb)
 
 
-## Conclusion
+## Summary
 
 Comparison with QuickFixN and QuickFixJ shows that FsFIX creates more reliable, concise code than other implementations. The gains are attributable to FsFIX's use of F# ADTs. 

@@ -102,7 +102,7 @@ FsFIXEcho did not find any issues with QuickFixJ, although the BusinessMessageRe
 
 
 
-## Conclusion
+## Summary
 
 ADTs combined with property based tests can help find errors that would otherwise be missed. The author has not previously worked with FIX, but by using property based testing found errors in the FIX spec not noticed when the specification was released.
 

@@ -60,13 +60,12 @@ to run against quickfixN use
 
     "fsFIXEcho.exe localhost 5001 CLIENT1 EXECUTOR \<outputPathForFailingMsgs>"
 
-
 When a failure is detected, i.e. the message received is not the same as the message sent, then msgIn and msgOut files, and aslo stringized versions of the corresponding byte buffers are generated in <\outputPathForFailingMsgs>, these can be diffed.
 
 
 ##  Benchmark
 
-Runs read and writing to/from byte buffer tests for FIX messages of varying complexity
+Runs "read message from a byte buffer" and "write message to a byte buffer" benchmarks for FIX messages of varying complexity.
 
 
 ##  PropertyTests
