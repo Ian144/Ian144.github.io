@@ -19,7 +19,7 @@ FsFIX contains the following
 
 ## Building FsFIX.sln
 
-Build using "Visual Studio 2015 update 3". Has also been built using "Visual Studios for Mac" once. 
+Build using "Visual Studio 2015 update 3". Has also been built using "Visual Studios for Mac". 
 
 
 ##  FsFIXCodeGen

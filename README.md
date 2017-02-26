@@ -27,6 +27,7 @@ The source for FsFIX can be found [here](https://github.com/Ian144/fsFix). At th
 [Building and Running FsFIX projects](BuildRun.md)
 
 
+<sup>1</sup> unit tests are still useful, property testing is not always appropriate.
 
 ## About the author
 
@@ -36,4 +37,4 @@ Interested in hiring me or asking me questions about FsFIX? my email address is 
 
 
 
-<sup>1</sup> unit tests are still useful, property testing is not always appropriate.
+

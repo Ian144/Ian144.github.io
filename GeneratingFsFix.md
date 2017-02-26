@@ -12,7 +12,7 @@ FIX Components are represented in FsFIX, but they have no effect in the byte rep
 
 Groups in the FIX4.4.xml spec are defined inline in their parent messages, groups (groups can contain groups) and components. There are many groups with the same name, sometimes containing the same members, sometimes not. FsFIX code generation finds the most common case of each set of groups with the same name, and gives it a separate F# definition with that name, other instances of groups types with the same base name are generated with a name that has been prefixed with that of the containing type. 
 
-### The most common 'Legs' group
+#### The most common 'Legs' group
 
 ```F#
 type NoLegsGrp = {
@@ -20,7 +20,7 @@ type NoLegsGrp = {
     }
 ```
 
-### Another 'Legs' group containing extra fields and groups
+#### A 'Legs' group containing extra fields and groups
 
 and with the name of the parent type 'TradeCaptureReport' prefixed to get the full type name.
 
