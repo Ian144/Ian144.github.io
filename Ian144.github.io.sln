@@ -1,0 +1,21 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2818A75B-E946-4FFD-846E-DD8E7CA6C06B}"
+	ProjectSection(SolutionItems) = preProject
+		ADTs.md = ADTs.md
+		buildRun.md = buildRun.md
+		GeneratingFsFix.md = GeneratingFsFix.md
+		Performance.md = Performance.md
+		PropertyTesting.md = PropertyTesting.md
+		README.md = README.md
+		scratch.md = scratch.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
