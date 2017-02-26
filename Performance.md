@@ -2,7 +2,7 @@
 
 
 
-FsFIX performance figures below cover writing FIX messages too and reading them from byte arrays. The FIX messages that are written, and the byte arrays that are read from, are created outside of the scope of the timed tests. The timings were generated using [BenchmarkDotNet](http://benchmarkdotnet.org/), on a 2013 macbook pro with 16GB ram running Windows 10 (from bootcamp, not a VM).
+FsFIX performance figures below cover writing FIX messages to and reading them from byte arrays. The FIX messages that are written, and the byte arrays that are read from, are created outside of the scope of the timed tests. The timings were generated using [BenchmarkDotNet](http://benchmarkdotnet.org/), on a 2013 macbook pro with 16GB ram running Windows 10 (from bootcamp, not a VM).
 
 
 ```

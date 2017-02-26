@@ -49,13 +49,14 @@ public class PosType extends StringField {
     }
 }
 ```
-The Java PosType class stores the case as a string, there are string constants defined, but their use is not type-checked, so the code below compiles.
+The Java PosType class stores the case as a string. There are string constants defined, but their use is not type-checked, so the code below compiles.
 
 ```Java
 quickfix.field.PosType pt = new quickfix.field.PosType("any old string");
 ```
 
-In FsFix F# it is impossible to express such an error in compilable code, the F# PosType discriminated union can only take the set of values defined by the type. 
+In FsFix F# it is impossible to express such an error in compilable code. There are two main forms of ADT, discriminated unions and records. Discriminated unions have a finite set of cases, the discriminated union for PosType is
+
 
 ```F#
 type PosType =
@@ -120,7 +121,7 @@ The FIX4.4.xml spec defines the UserRequest message like this
 </message>
 ```
 
-The generated F# ADT looks very similar and is of comparible length to the XML definition, and is easy to take-in and understand
+The generated F# ADT looks very similar and is of comparable length to the XML definition, and is easy to take-in and understand
 
 ```F#
 type UserRequest = {
@@ -133,7 +134,7 @@ type UserRequest = {
     }
 ```
 
-But to be fair to Java and C#, creating FsFIX messages that have many optional fields could be tedious, so helper factory functions are also generated like this one below for UserRequest. Some message types have many optional fields, there are 119 in an ExecutionReport, typing all the 'None's would be painful.
+To be fair to QuickFixJ and QuickFixN, creating FsFIX messages that have many optional fields could be tedious. FIX message types have many optional fields, there are 119 in an ExecutionReport. Typing all the 'None's would be painful, so helper factory functions are generated like the one below for UserRequest. 
 
 ```F#
 let MkUserRequest (userRequestID:UserRequestID, userRequestType:UserRequestType, username:Username) : UserRequest = {
@@ -145,7 +146,6 @@ let MkUserRequest (userRequestID:UserRequestID, userRequestType:UserRequestType,
     RawData = None
   }
 ```
-FsFIX stores the msgtype tag value, "BE" in this case, in a single lookup function for all message types. The cost of this is spread between all message types.
 
 The QuickFix Java implementation of UserRequest, below, offers no more functionality than the F# version but is considerably longer, 4453 characters vs 492 for the FsFIX definition + factory function. 
 
@@ -317,21 +317,7 @@ public class UserRequest extends Message {
 }
 ```
 
-### Comparing the overall size difference of FIX4.4 generated code in QuickFIXJ and FsFIX
-
-FIX4.4.xml: 338kb
-
-FsFIX generated FIX4.4 source files, including fields, components, groups and factory functions side: 2.10 mb - 13 files
-
-QuickFIXJ generated FIX4.4 messages: 7.38mb - 121 files
-
-QuickFIXN generated FIX4.4 messages: 14.4mb - 94 files
-
-
-
-
-
-###  quickFix Java vs the equivalent fsFix F#
+### Creating a MarketDataRequest message -  QuickFixJ vs the equivalent FsFIX code
 
 ```Java
     MDReqID reqId = new MDReqID("MDRQ-" + String.valueOf(System.currentTimeMillis()));
@@ -357,9 +343,23 @@ QuickFIXN generated FIX4.4 messages: 14.4mb - 94 files
                 SubscriptionRequestType.SnapshotPlusUpdates,
                 MarketDepth 1,
                 [MDEntryType.Bid; MDEntryType.Offer] |> List.map MkNoMDEntryTypesGrp,
-                [MkInstrument (Fix44.Fields.Symbol "EUR/USD")] |> List.map MkMarketDataRequestNoRelatedSymGrp
-                )
+                [MkInstrument (Fix44.Fields.Symbol "EUR/USD")] |> List.map MkMarketDataRequestNoRelatedSymGrp )
 ```
 
 
-## CONCLUSION TODO
+
+
+### Comparing the overall size difference of FIX4.4 generated code in FsFIX, QuickFixJ and QuickFixN
+
+A simple measure of consiceness, that counts the number of non-whitespace, non-line terminator characters in FIX4.4 generated code for FsFIX, QuickfixJ and QuickfixN.
+            
+FsFIX:      1,688,059
+QuickfixJ:  8,045,893
+QuickfixN:  7,523,220
+
+(FIX4.4.xml: 338kb)
+
+
+## Conclusion
+
+Comparison with QuickFixN and QuickFixJ shows that FsFIX creates more reliable, concise code than other implementations. The gains are attributable to FsFIX's use of F# ADTs. 
