@@ -54,24 +54,24 @@ Uses FsCheck to generate random but valid FIX messages and sends them to modifie
 
 Command line parameters default to values that should run against quickFixJ 
     
-    "fsFIXEcho.exe" is equivalent to "fsFIXEcho.exe localhost 9880 BANZAI EXEC \<currentDir>"
+    "fsFIXEcho.exe" is equivalent to "fsFIXEcho.exe localhost 9880 BANZAI EXEC <currentDir>"
 
 to run against quickfixN use
 
-    "fsFIXEcho.exe localhost 5001 CLIENT1 EXECUTOR \<outputPathForFailingMsgs>"
+    "fsFIXEcho.exe localhost 5001 CLIENT1 EXECUTOR <outputPathForFailingMsgs>"
 
-When a failure is detected, i.e. the message received is not the same as the message sent, then msgIn and msgOut files, and aslo stringized versions of the corresponding byte buffers are generated in <\outputPathForFailingMsgs>, these can be diffed.
+When a failure is detected, i.e. the message received is not the same as the message sent, then msgIn and msgOut files and also stringized versions of the corresponding byte buffers are generated in <\outputPathForFailingMsgs>. These can be diffed to make it easier to see where the difference is, which would otherwise be difficult if the FIX message is large.
 
 
 ##  Benchmark
 
-Runs "read message from a byte buffer" and "write message to a byte buffer" benchmarks for FIX messages of varying complexity.
+Runs "read message from a byte buffer" and "write message to a byte buffer" benchmarks for FIX messages of varying complexity. A console exe, run the release build for accurate results. No command line parameters are required.
 
 
 ##  PropertyTests
 
-Will run using the build-in Visual Studio test runner, TestDriven.net and probably other test runners.
+Will run using the built-in Visual Studio test runner, TestDriven.net and probably other test runners.
 
 ##  UnitTests
 
-Will run using the build-in Visual Studio test runner, TestDriven.net and probably other test runners.
+Will run using the built-in Visual Studio test runner, TestDriven.net and probably other test runners.
