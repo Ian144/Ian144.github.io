@@ -357,7 +357,9 @@ FsFIX
 A simple measure of consiceness, that counts the number of non-whitespace, non-line terminator characters in FIX4.4 generated code for FsFIX, QuickfixJ and QuickfixN.
             
 FsFIX:      1,688,059
+
 QuickfixJ:  8,045,893
+
 QuickfixN:  7,523,220
 
 (FIX4.4.xml: 338kb)
