@@ -354,7 +354,7 @@ FsFIX
 
 ### Comparing the overall size difference of FIX4.4 generated code in FsFIX, QuickFixJ and QuickFixN
 
-A simple measure of consiceness, that counts the number of non-whitespace, non-line terminator characters in FIX4.4 generated code for FsFIX, QuickfixJ and QuickfixN.
+A simple measure of conciseness, that counts the number of non-whitespace, non-line terminator characters in FIX4.4 generated code for FsFIX, QuickfixJ and QuickfixN, for roughly equivalent functionality.
             
 FsFIX:      1,688,059
 
@@ -362,8 +362,7 @@ QuickfixJ:  8,045,893
 
 QuickfixN:  7,523,220
 
-(FIX4.4.xml: 338kb)
-
+The numbers speak for themselves.
 
 ## Summary
 
