@@ -98,7 +98,7 @@ FsFIX treats these fields as multi-case discriminated unions, and pattern matche
 
 ### QuickFixJ possible issue
 
-FsFIXEcho did not find any issues with QuickFixJ, although the BusinessMessageReject message did cause QuickFixJ executor_echo process to appear to hang, maybe because BusinessMessageReject is an 'admin like' message, and QuickFixJ session logic expects the rejection to refer to an earlier message sent to FsFIXEcho.
+FsFIXEcho did not find any issues with QuickFixJ, although the BusinessMessageReject message did cause QuickFixJ executor_echo process to appear to hang, maybe because BusinessMessageReject is an 'admin like' message, and QuickFixJ session logic expects the rejection to refer to an earlier message.
 
 
 
