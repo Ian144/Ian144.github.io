@@ -19,6 +19,8 @@ FIX code generation is the first stage of project to build a fully fledged FIX e
 
 [Performance](Performance.md)
 
+[Performance compared to QuickFixN and QuickFixJ](PerformanceUpdate.md)
+
 [Building and Running FsFIX projects](BuildRun.md)
 
 
